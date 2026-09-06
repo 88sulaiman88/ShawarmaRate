@@ -1,0 +1,725 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>شاورما ريت</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --blue:#1D4ED8;
+    --blue-dark:#1739A8;
+    --blue-tint:#F3F7FF;
+    --ink:#111827;
+    --muted:#6B7280;
+    --line:#E5E9F0;
+    --font:"IBM Plex Sans Arabic","Segoe UI",Tahoma,sans-serif;
+  }
+
+  *{box-sizing:border-box}
+
+  body{
+    margin:0;background:#fff;color:var(--ink);
+    font-family:var(--font);font-size:16px;line-height:1.7;
+    -webkit-font-smoothing:antialiased;
+  }
+
+  .wrap{max-width:560px;margin:0 auto;padding:52px 22px 72px}
+
+  header.masthead{margin-bottom:48px}
+  .masthead h1{
+    font-weight:700;font-size:clamp(28px,7vw,38px);
+    line-height:1.3;margin:0 0 12px;color:var(--blue);
+  }
+  .lede{margin:0 0 12px;max-width:46ch;color:var(--muted);font-size:16px}
+  .lede:last-child{margin-bottom:0}
+
+  h2{font-weight:600;font-size:19px;margin:0 0 4px}
+  .sub{margin:0 0 20px;color:var(--muted);font-size:14px}
+  section{margin-bottom:52px}
+
+  /* ---------- قائمة المطاعم ---------- */
+  .stack{list-style:none;margin:0;padding:0;border-top:1px solid var(--line)}
+  .row{
+    display:flex;align-items:center;gap:13px;
+    padding:14px 2px;border-bottom:1px solid var(--line);
+  }
+  .logo{
+    width:42px;height:42px;flex:0 0 42px;
+    border-radius:50%;object-fit:cover;
+    background:var(--blue-tint);color:var(--blue);
+    display:flex;align-items:center;justify-content:center;
+    font-weight:600;font-size:18px;overflow:hidden;
+  }
+  .row-body{min-width:0;flex:1}
+  .row-name{font-weight:500;font-size:16.5px;line-height:1.4}
+  .row-note{color:var(--muted);font-size:13.5px;line-height:1.5}
+
+  /* ---------- النموذج ---------- */
+  .field{margin-bottom:15px}
+  label{display:block;font-size:14px;font-weight:500;margin-bottom:6px}
+  .hint{color:var(--muted);font-weight:400}
+  input,textarea{
+    width:100%;font-family:var(--font);font-size:16px;color:var(--ink);
+    background:#fff;border:1px solid var(--line);border-radius:8px;
+    padding:11px 13px;transition:border-color .15s,box-shadow .15s;
+  }
+  textarea{resize:vertical;min-height:84px;line-height:1.6}
+  input:focus,textarea:focus{outline:none;border-color:var(--blue);box-shadow:0 0 0 3px rgba(29,78,216,.12)}
+  input:focus-visible,textarea:focus-visible,button:focus-visible{outline:2px solid var(--blue);outline-offset:2px}
+
+  button{
+    font-family:var(--font);font-weight:600;font-size:15.5px;color:#fff;
+    background:var(--blue);border:0;border-radius:8px;
+    padding:12px 26px;cursor:pointer;transition:background .15s;
+  }
+  button:hover{background:var(--blue-dark)}
+  button[disabled]{background:#9CA3AF;cursor:default}
+
+  .msg{margin:13px 0 0;font-size:14px;min-height:1px}
+  .msg.err{color:#B42318}
+  .msg.ok{color:var(--blue)}
+  .privacy{margin:16px 0 0;color:var(--muted);font-size:13px;line-height:1.6}
+
+  /* ---------- لوحة الأدمن ---------- */
+  footer{
+    margin-top:56px;padding-top:16px;border-top:1px solid var(--line);
+    display:flex;justify-content:space-between;align-items:center;gap:12px;
+    color:#9CA3AF;font-size:13px;
+  }
+  .linkish{
+    background:none;border:0;padding:0;cursor:pointer;
+    font-family:var(--font);font-size:13px;font-weight:500;color:var(--blue);
+    text-decoration:underline;text-underline-offset:3px;
+  }
+  .linkish:hover{background:none;color:var(--blue-dark)}
+
+  .admin{display:none;margin:24px 0 0}
+  .admin.open{display:block}
+  .panel{
+    background:var(--blue-tint);border:1px solid #DCE7FF;
+    border-radius:12px;padding:20px 18px;margin-bottom:14px;
+  }
+  .panel:last-child{margin-bottom:0}
+  .gate{display:flex;gap:8px;align-items:flex-start}
+  .gate input{max-width:240px;background:#fff}
+  .gate button{padding:11px 20px;font-size:15px}
+
+  .adm-head{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:14px}
+  .adm-tools{display:flex;gap:8px}
+  .adm-tools button,.mini{
+    background:#fff;color:var(--blue);border:1px solid #DCE7FF;
+    padding:6px 12px;font-size:13px;font-weight:500;border-radius:7px;
+  }
+  .adm-tools button:hover,.mini:hover{background:#fff;border-color:var(--blue)}
+
+  .panel input,.panel textarea{background:#fff}
+  .addbox .field{margin-bottom:11px}
+  .addbox label{font-size:13.5px}
+  .filerow{display:flex;align-items:center;gap:11px}
+  .filerow input[type=file]{font-size:13px;padding:8px;background:#fff}
+  .preview{
+    width:42px;height:42px;flex:0 0 42px;border-radius:50%;
+    object-fit:cover;background:#fff;border:1px solid #DCE7FF;display:none;
+  }
+  .addbox button.add{padding:10px 22px;font-size:15px}
+
+  .feed{list-style:none;margin:0;padding:0}
+  .entry{padding:13px 0;border-top:1px solid #DCE7FF;display:flex;gap:10px;align-items:center}
+  .entry:first-child{border-top:0;padding-top:0}
+  .entry-body{min-width:0;flex:1}
+  .entry-top{display:flex;align-items:baseline;gap:9px;flex-wrap:wrap}
+  .entry-name{font-weight:600;font-size:16px}
+  .entry-by{color:var(--muted);font-size:13.5px}
+  .entry-note{margin:3px 0 0;color:var(--muted);font-size:14.5px;line-height:1.6}
+  .entry-when{margin:3px 0 0;color:#9CA3AF;font-size:12.5px}
+  .acts{display:flex;align-items:center;gap:4px;flex:0 0 auto}
+  .del{
+    background:none;color:#9CA3AF;border:0;padding:0 6px;
+    font-size:18px;line-height:1.4;cursor:pointer;
+  }
+  .del:hover{background:none;color:#B42318}
+  .empty{color:var(--muted);font-size:14.5px;margin:0}
+  .count{color:#9CA3AF;font-size:13px;font-weight:400}
+
+  .pwbox{margin-top:4px}
+  .pwbox summary{cursor:pointer;font-size:14px;font-weight:500;color:var(--blue)}
+  .pwnote{margin:8px 0 10px;color:var(--muted);font-size:13px;line-height:1.6}
+  .pwnote code{background:#fff;border:1px solid #DCE7FF;border-radius:4px;padding:1px 5px;font-size:12.5px}
+  .pwbox textarea{font-family:ui-monospace,Menlo,Consolas,monospace}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="masthead">
+    <h1>شاورما ريت</h1>
+    <p class="lede">أنا سليمان، ومثلك تمامًا… يحب الشاورما اللي عرفناها من زمان.</p>
+    <p class="lede">هذا الموقع بحث عن ذاك الطعم القديم… عن الشاورما البسيطة اللي ما كانت تحتاج تشرح نفسها: دجاج متبّل، ثوم أصلي، مخلل، وخبز مفرود… وبس.</p>
+  </header>
+
+  <section>
+    <h2>أنا قاعد أجرّب:</h2>
+    <ol class="stack" id="stack"></ol>
+  </section>
+
+  <section>
+    <h2>حاب تقترح مطعم شاورما؟</h2>
+    <p class="sub">أضفه هنا وبيوصلني.</p>
+    <div class="field">
+      <label for="place">اسم المطعم</label>
+      <input id="place" type="text" autocomplete="off" maxlength="80" placeholder="مثال: شاورما الأصيل">
+    </div>
+    <div class="field">
+      <label for="who">اسمك</label>
+      <input id="who" type="text" autocomplete="name" maxlength="40" placeholder="عشان أعرف مين اقترحه">
+    </div>
+    <div class="field">
+      <label for="note">ملاحظات أخرى <span class="hint">— اختياري</span></label>
+      <textarea id="note" maxlength="400" placeholder="الفرع، وش أطلب، أفضل وقت للزيارة… أي شي يفيد"></textarea>
+    </div>
+    <button id="send" type="button">أضف الاقتراح</button>
+    <p class="msg" id="msg" role="status" aria-live="polite"></p>
+    <p class="privacy">اقتراحك يوصلني أنا بس، وما يظهر لبقية الزوار.</p>
+  </section>
+
+  <section class="admin" id="admin" aria-label="لوحة الأدمن" style="margin-bottom:0">
+
+    <div class="panel" id="gateCard">
+      <label for="pass">كلمة المرور</label>
+      <div class="gate">
+        <input id="pass" type="password" autocomplete="current-password" placeholder="••••••••">
+        <button id="unlock" type="button">دخول</button>
+      </div>
+      <p class="msg" id="gateMsg" role="status" aria-live="polite"></p>
+    </div>
+
+    <div id="panels" style="display:none">
+
+      <div class="panel addbox">
+        <div class="adm-head">
+          <h2 style="margin:0">المطاعم اللي أجربها</h2>
+          <div class="adm-tools"><button id="lock" type="button">خروج</button></div>
+        </div>
+
+        <ul class="feed" id="manage"></ul>
+
+        <div style="margin-top:16px;padding-top:14px;border-top:1px solid #DCE7FF">
+          <div class="field">
+            <label for="pName">اسم المطعم</label>
+            <input id="pName" type="text" maxlength="80" placeholder="مثال: شاورما الأصيل">
+          </div>
+          <div class="field">
+            <label for="pNote">ملاحظة <span class="hint">— اختياري</span></label>
+            <input id="pNote" type="text" maxlength="80" placeholder="الفرع، أو وش أطلب">
+          </div>
+          <div class="field">
+            <label for="pFile">اللوقو <span class="hint">— اختياري</span></label>
+            <div class="filerow">
+              <input id="pFile" type="file" accept="image/*">
+              <img class="preview" id="pPrev" alt="">
+            </div>
+            <input id="pLogo" type="text" style="margin-top:8px" placeholder="أو الصق رابط صورة">
+          </div>
+          <button class="add" id="pAdd" type="button">أضف المطعم</button>
+          <p class="msg" id="pMsg" role="status" aria-live="polite"></p>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="adm-head">
+          <h2 style="margin:0">الاقتراحات <span class="count" id="count"></span></h2>
+          <div class="adm-tools"><button id="export" type="button">تصدير</button></div>
+        </div>
+        <ul class="feed" id="feed"></ul>
+      </div>
+
+      <div class="panel">
+        <details class="pwbox">
+          <summary>تغيير كلمة المرور</summary>
+          <p class="pwnote">اكتب الكلمة الجديدة، وانسخ الناتج مكان <code>AUTH</code> في الكود. الكلمة نفسها ما تنحفظ في أي مكان.</p>
+          <div class="gate">
+            <input id="newPass" type="password" autocomplete="new-password" placeholder="الكلمة الجديدة">
+            <button id="gen" type="button">توليد</button>
+          </div>
+          <textarea id="genOut" rows="5" readonly style="display:none;margin-top:10px;font-size:13px;direction:ltr;text-align:left"></textarea>
+        </details>
+      </div>
+
+    </div>
+  </section>
+
+  <footer>
+    <span>شاورما ريت</span>
+    <button class="linkish" id="adminToggle" type="button">دخول الأدمن</button>
+  </footer>
+</div>
+
+<script>
+/* ==========================================================
+   كلمة مرور الأدمن — محفوظة كهاش، مو كنص صريح.
+   الطريقة: PBKDF2-HMAC-SHA256 بملح عشوائي و250 ألف تكرار.
+   الكلمة الحالية: shawarma
+   لتغييرها: ادخل اللوحة > تغيير كلمة المرور > انسخ الناتج هنا.
+   ========================================================== */
+const AUTH = {
+  salt: "095b1cf602b2e591d2f372ee6921efce",
+  hash: "83dc4882b5414f2cb4931f48dbcfda567e50761857d141812faec2d80df75bb3",
+  iterations: 250000
+};
+
+/* المطاعم الأولية — تظهر أول مرة فقط، وبعدها تتحكم فيها من لوحة الأدمن */
+const SEED = [
+  { name: "شاورما هاوس", logo: "", note: "" },
+];
+
+const PIPE_KEY = "pipeline";
+let pipeline = [];
+
+/* ---------- عرض قائمة المطاعم ---------- */
+function logoEl(r){
+  if (r.logo){
+    const img = document.createElement("img");
+    img.className = "logo";
+    img.src = r.logo;
+    img.alt = r.name;
+    img.loading = "lazy";
+    img.onerror = () => { img.replaceWith(letterEl(r)); };
+    return img;
+  }
+  return letterEl(r);
+}
+function letterEl(r){
+  const d = document.createElement("div");
+  d.className = "logo";
+  d.textContent = (r.name || "?").trim().charAt(0);
+  return d;
+}
+
+function renderPipeline(){
+  const stack = document.getElementById("stack");
+  stack.innerHTML = "";
+  if (!pipeline.length){
+    const li = document.createElement("li");
+    li.className = "row";
+    li.innerHTML = '<p class="empty">القائمة فاضية حالياً.</p>';
+    stack.appendChild(li);
+    return;
+  }
+  pipeline.forEach(r => {
+    const li = document.createElement("li");
+    li.className = "row";
+    const body = document.createElement("div");
+    body.className = "row-body";
+    const nm = document.createElement("div");
+    nm.className = "row-name";
+    nm.textContent = r.name;
+    body.appendChild(nm);
+    if (r.note){
+      const nt = document.createElement("div");
+      nt.className = "row-note";
+      nt.textContent = r.note;
+      body.appendChild(nt);
+    }
+    li.append(logoEl(r), body);
+    stack.appendChild(li);
+  });
+}
+
+async function loadPipeline(){
+  try{
+    const res = await window.storage.get(PIPE_KEY, true);
+    pipeline = res ? JSON.parse(res.value) : SEED.slice();
+  }catch(e){
+    pipeline = SEED.slice();
+  }
+  renderPipeline();
+}
+
+async function savePipeline(){
+  await window.storage.set(PIPE_KEY, JSON.stringify(pipeline), true);
+}
+
+/* ---------- إرسال الاقتراح ---------- */
+const msgEl = document.getElementById("msg");
+const btn   = document.getElementById("send");
+
+function say(el, text, kind){
+  el.textContent = text;
+  el.className = "msg" + (kind ? " " + kind : "");
+}
+
+const norm = s => s.replace(/[\s\u064B-\u0652]/g,"").replace(/[أإآ]/g,"ا").replace(/ة/g,"ه");
+
+async function submit(){
+  const place = document.getElementById("place").value.trim();
+  const who   = document.getElementById("who").value.trim();
+  const note  = document.getElementById("note").value.trim();
+
+  if (!place){ say(msgEl, "اكتب اسم المطعم أول.", "err"); document.getElementById("place").focus(); return; }
+  if (!who){ say(msgEl, "ناقص اسمك.", "err"); document.getElementById("who").focus(); return; }
+  if (pipeline.some(r => norm(r.name) === norm(place))){
+    say(msgEl, place + " موجود بالفعل بالقائمة فوق.", "err");
+    return;
+  }
+
+  const entry = {
+    id: "sug:" + Date.now() + "-" + Math.random().toString(36).slice(2,7),
+    place, who, note, t: Date.now()
+  };
+
+  btn.disabled = true;
+  btn.textContent = "جاري الإضافة…";
+  try{
+    const ok = await window.storage.set(entry.id, JSON.stringify(entry), true);
+    if (!ok) throw new Error("no-write");
+    document.getElementById("place").value = "";
+    document.getElementById("note").value  = "";
+    say(msgEl, "وصلني اقتراحك. شكراً يا " + who + " 🌯", "ok");
+  }catch(e){
+    say(msgEl, "ما انحفظ الاقتراح. تأكد من الاتصال وجرّب مرة ثانية.", "err");
+  }finally{
+    btn.disabled = false;
+    btn.textContent = "أضف الاقتراح";
+  }
+}
+
+btn.addEventListener("click", submit);
+["place","who"].forEach(id =>
+  document.getElementById(id).addEventListener("keydown", e => { if (e.key === "Enter") submit(); })
+);
+
+/* ---------- الدخول ---------- */
+const adminEl  = document.getElementById("admin");
+const gateCard = document.getElementById("gateCard");
+const panels   = document.getElementById("panels");
+const gateMsg  = document.getElementById("gateMsg");
+const passEl   = document.getElementById("pass");
+const feedEl   = document.getElementById("feed");
+const countEl  = document.getElementById("count");
+const manageEl = document.getElementById("manage");
+const pMsg     = document.getElementById("pMsg");
+let items = [];
+
+document.getElementById("adminToggle").addEventListener("click", () => {
+  adminEl.classList.toggle("open");
+  if (adminEl.classList.contains("open")){
+    adminEl.scrollIntoView({ behavior:"smooth", block:"center" });
+    if (panels.style.display === "none") passEl.focus();
+  }
+});
+
+const toHex   = buf => [...new Uint8Array(buf)].map(x => x.toString(16).padStart(2,"0")).join("");
+const fromHex = hex => new Uint8Array(hex.match(/.{2}/g).map(h => parseInt(h,16)));
+
+async function derive(password, saltHex, iterations){
+  const key = await crypto.subtle.importKey(
+    "raw", new TextEncoder().encode(password), "PBKDF2", false, ["deriveBits"]
+  );
+  const bits = await crypto.subtle.deriveBits(
+    { name:"PBKDF2", salt: fromHex(saltHex), iterations, hash:"SHA-256" }, key, 256
+  );
+  return toHex(bits);
+}
+
+function sameHash(a, b){
+  if (a.length !== b.length) return false;
+  let diff = 0;
+  for (let i = 0; i < a.length; i++) diff |= a.charCodeAt(i) ^ b.charCodeAt(i);
+  return diff === 0;
+}
+
+async function unlock(){
+  const val = passEl.value;
+  if (!val){ say(gateMsg, "اكتب كلمة المرور.", "err"); return; }
+  const btnU = document.getElementById("unlock");
+  btnU.disabled = true;
+  say(gateMsg, "جاري التحقق…", "");
+  const hash = await derive(val, AUTH.salt, AUTH.iterations);
+  btnU.disabled = false;
+  if (!sameHash(hash, AUTH.hash)){ say(gateMsg, "كلمة المرور غير صحيحة.", "err"); return; }
+  passEl.value = "";
+  say(gateMsg, "", "");
+  try{ await window.storage.set("admin-session", "1", false); }catch(e){}
+  openPanel();
+}
+
+async function openPanel(){
+  gateCard.style.display = "none";
+  panels.style.display = "";
+  adminEl.classList.add("open");
+  renderManage();
+  feedEl.innerHTML = '<li class="empty">جاري التحميل…</li>';
+  await loadSuggestions();
+}
+
+document.getElementById("unlock").addEventListener("click", unlock);
+passEl.addEventListener("keydown", e => { if (e.key === "Enter") unlock(); });
+
+document.getElementById("lock").addEventListener("click", async () => {
+  try{ await window.storage.delete("admin-session", false); }catch(e){}
+  panels.style.display = "none";
+  gateCard.style.display = "";
+  adminEl.classList.remove("open");
+  items = [];
+});
+
+/* ---------- إدارة المطاعم ---------- */
+function renderManage(){
+  manageEl.innerHTML = "";
+  if (!pipeline.length){
+    manageEl.innerHTML = '<li class="empty">ما أضفت أي مطعم بعد.</li>';
+    return;
+  }
+  pipeline.forEach((r, idx) => {
+    const li = document.createElement("li");
+    li.className = "entry";
+
+    const body = document.createElement("div");
+    body.className = "entry-body";
+    const nm = document.createElement("div");
+    nm.className = "entry-name";
+    nm.textContent = r.name;
+    body.appendChild(nm);
+    if (r.note){
+      const p = document.createElement("p");
+      p.className = "entry-note";
+      p.textContent = r.note;
+      body.appendChild(p);
+    }
+
+    const del = document.createElement("button");
+    del.className = "del";
+    del.type = "button";
+    del.title = "حذف";
+    del.setAttribute("aria-label", "حذف " + r.name);
+    del.textContent = "×";
+    del.addEventListener("click", async () => {
+      del.disabled = true;
+      const backup = pipeline.slice();
+      pipeline.splice(idx, 1);
+      try{
+        await savePipeline();
+        renderManage();
+        renderPipeline();
+        say(pMsg, "انحذف " + r.name + ".", "ok");
+      }catch(e){
+        pipeline = backup;
+        del.disabled = false;
+        say(pMsg, "ما انحذف. جرّب مرة ثانية.", "err");
+      }
+    });
+
+    li.append(logoEl(r), body, del);
+    manageEl.appendChild(li);
+  });
+}
+
+/* اختيار لوقو من الجهاز — يتصغّر لـ 160 بكسل قبل الحفظ */
+let pendingLogo = "";
+document.getElementById("pFile").addEventListener("change", e => {
+  const file = e.target.files && e.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = () => {
+    const img = new Image();
+    img.onload = () => {
+      const S = 160, c = document.createElement("canvas");
+      c.width = c.height = S;
+      const ctx = c.getContext("2d");
+      const side = Math.min(img.width, img.height);
+      ctx.drawImage(img, (img.width-side)/2, (img.height-side)/2, side, side, 0, 0, S, S);
+      pendingLogo = c.toDataURL("image/jpeg", 0.85);
+      const prev = document.getElementById("pPrev");
+      prev.src = pendingLogo;
+      prev.style.display = "block";
+    };
+    img.onerror = () => say(pMsg, "ما قدرت أقرأ الصورة.", "err");
+    img.src = reader.result;
+  };
+  reader.readAsDataURL(file);
+});
+
+document.getElementById("pAdd").addEventListener("click", async () => {
+  const nameEl = document.getElementById("pName");
+  const noteEl = document.getElementById("pNote");
+  const urlEl  = document.getElementById("pLogo");
+  const name = nameEl.value.trim();
+  if (!name){ say(pMsg, "اكتب اسم المطعم.", "err"); nameEl.focus(); return; }
+  if (pipeline.some(r => norm(r.name) === norm(name))){ say(pMsg, name + " موجود بالقائمة.", "err"); return; }
+
+  const b = document.getElementById("pAdd");
+  b.disabled = true;
+  b.textContent = "جاري الحفظ…";
+  const backup = pipeline.slice();
+  pipeline.push({ name, logo: pendingLogo || urlEl.value.trim(), note: noteEl.value.trim() });
+  try{
+    await savePipeline();
+    nameEl.value = noteEl.value = urlEl.value = "";
+    document.getElementById("pFile").value = "";
+    document.getElementById("pPrev").style.display = "none";
+    pendingLogo = "";
+    renderManage();
+    renderPipeline();
+    say(pMsg, "انضاف " + name + ".", "ok");
+  }catch(e){
+    pipeline = backup;
+    say(pMsg, "ما انحفظ. لو اللوقو كبير، جرّب صورة أصغر.", "err");
+  }finally{
+    b.disabled = false;
+    b.textContent = "أضف المطعم";
+  }
+});
+
+/* ---------- الاقتراحات ---------- */
+const fmt = t => new Date(t).toLocaleDateString("ar-SA-u-nu-latn", { year:"numeric", month:"long", day:"numeric" });
+
+function renderFeed(){
+  feedEl.innerHTML = "";
+  countEl.textContent = items.length ? "(" + items.length + ")" : "";
+  if (!items.length){
+    feedEl.innerHTML = '<li class="empty">ما وصل ولا اقتراح لين الآن.</li>';
+    return;
+  }
+  items.forEach(it => {
+    const li = document.createElement("li");
+    li.className = "entry";
+
+    const body = document.createElement("div");
+    body.className = "entry-body";
+    const top = document.createElement("div");
+    top.className = "entry-top";
+    const nm = document.createElement("span");
+    nm.className = "entry-name";
+    nm.textContent = it.place;
+    const by = document.createElement("span");
+    by.className = "entry-by";
+    by.textContent = "اقتراح " + it.who;
+    top.append(nm, by);
+    body.appendChild(top);
+    if (it.note){
+      const p = document.createElement("p");
+      p.className = "entry-note";
+      p.textContent = it.note;
+      body.appendChild(p);
+    }
+    const when = document.createElement("p");
+    when.className = "entry-when";
+    when.textContent = fmt(it.t);
+    body.appendChild(when);
+
+    const acts = document.createElement("div");
+    acts.className = "acts";
+
+    const add = document.createElement("button");
+    add.className = "mini";
+    add.type = "button";
+    add.textContent = "أضفه للقائمة";
+    add.addEventListener("click", async () => {
+      if (pipeline.some(r => norm(r.name) === norm(it.place))){
+        add.textContent = "موجود";
+        return;
+      }
+      add.disabled = true;
+      const backup = pipeline.slice();
+      pipeline.push({ name: it.place, logo: "", note: "" });
+      try{
+        await savePipeline();
+        renderManage();
+        renderPipeline();
+        add.textContent = "انضاف";
+      }catch(e){
+        pipeline = backup;
+        add.disabled = false;
+      }
+    });
+
+    const del = document.createElement("button");
+    del.className = "del";
+    del.type = "button";
+    del.title = "حذف";
+    del.setAttribute("aria-label", "حذف اقتراح " + it.place);
+    del.textContent = "×";
+    del.addEventListener("click", async () => {
+      del.disabled = true;
+      try{
+        await window.storage.delete(it.id, true);
+        items = items.filter(x => x.id !== it.id);
+        renderFeed();
+      }catch(e){ del.disabled = false; }
+    });
+
+    acts.append(add, del);
+    li.append(body, acts);
+    feedEl.appendChild(li);
+  });
+}
+
+async function loadSuggestions(){
+  try{
+    const res = await window.storage.list("sug:", true);
+    const keys = (res && res.keys) ? res.keys : [];
+    const got = await Promise.all(keys.map(async k => {
+      try{
+        const r = await window.storage.get(k, true);
+        return r ? JSON.parse(r.value) : null;
+      }catch(e){ return null; }
+    }));
+    items = got.filter(Boolean).sort((a,b) => b.t - a.t);
+  }catch(e){
+    items = [];
+    feedEl.innerHTML = '<li class="empty">ما قدرت أجيب الاقتراحات. حدّث الصفحة.</li>';
+    return;
+  }
+  renderFeed();
+}
+
+document.getElementById("export").addEventListener("click", () => {
+  if (!items.length) return;
+  const rows = [["المطعم","المقترح","ملاحظات","التاريخ"]]
+    .concat(items.map(i => [i.place, i.who, i.note || "", fmt(i.t)]));
+  const csv = "\ufeff" + rows.map(r => r.map(c => '"' + String(c).replace(/"/g,'""') + '"').join(",")).join("\n");
+  const url = URL.createObjectURL(new Blob([csv], { type:"text/csv;charset=utf-8" }));
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = "shawarma-suggestions.csv";
+  a.click();
+  URL.revokeObjectURL(url);
+});
+
+/* ---------- تغيير كلمة المرور ---------- */
+document.getElementById("gen").addEventListener("click", async () => {
+  const el  = document.getElementById("newPass");
+  const out = document.getElementById("genOut");
+  const g   = document.getElementById("gen");
+  if (!el.value){ el.focus(); return; }
+  g.disabled = true;
+  g.textContent = "…";
+  const salt = toHex(crypto.getRandomValues(new Uint8Array(16)));
+  const hash = await derive(el.value, salt, AUTH.iterations);
+  out.value =
+    'const AUTH = {\n' +
+    '  salt: "' + salt + '",\n' +
+    '  hash: "' + hash + '",\n' +
+    '  iterations: ' + AUTH.iterations + '\n' +
+    '};';
+  out.style.display = "";
+  out.select();
+  el.value = "";
+  g.disabled = false;
+  g.textContent = "توليد";
+});
+
+/* ---------- بدء ---------- */
+(async () => {
+  await loadPipeline();
+  try{
+    const s = await window.storage.get("admin-session", false);
+    if (s && s.value === "1") openPanel();
+  }catch(e){}
+})();
+</script>
+</body>
+</html>
