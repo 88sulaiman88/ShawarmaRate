@@ -9,30 +9,16 @@
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
   :root{
-    --blue:#1D4ED8;
-    --blue-dark:#1739A8;
-    --blue-tint:#F3F7FF;
-    --ink:#111827;
-    --muted:#6B7280;
-    --line:#E5E9F0;
+    --blue:#1D4ED8; --blue-dark:#1739A8; --blue-tint:#F3F7FF;
+    --ink:#111827; --muted:#6B7280; --line:#E5E9F0;
     --font:"IBM Plex Sans Arabic","Segoe UI",Tahoma,sans-serif;
   }
-
   *{box-sizing:border-box}
-
-  body{
-    margin:0;background:#fff;color:var(--ink);
-    font-family:var(--font);font-size:16px;line-height:1.7;
-    -webkit-font-smoothing:antialiased;
-  }
-
+  body{margin:0;background:#fff;color:var(--ink);font-family:var(--font);font-size:16px;line-height:1.7;-webkit-font-smoothing:antialiased}
   .wrap{max-width:560px;margin:0 auto;padding:52px 22px 72px}
 
   header.masthead{margin-bottom:48px}
-  .masthead h1{
-    font-weight:700;font-size:clamp(28px,7vw,38px);
-    line-height:1.3;margin:0 0 12px;color:var(--blue);
-  }
+  .masthead h1{font-weight:700;font-size:clamp(28px,7vw,38px);line-height:1.3;margin:0 0 12px;color:var(--blue)}
   .lede{margin:0 0 12px;max-width:46ch;color:var(--muted);font-size:16px}
   .lede:last-child{margin-bottom:0}
 
@@ -40,41 +26,22 @@
   .sub{margin:0 0 20px;color:var(--muted);font-size:14px}
   section{margin-bottom:52px}
 
-  /* ---------- قائمة المطاعم ---------- */
   .stack{list-style:none;margin:0;padding:0;border-top:1px solid var(--line)}
-  .row{
-    display:flex;align-items:center;gap:13px;
-    padding:14px 2px;border-bottom:1px solid var(--line);
-  }
-  .logo{
-    width:42px;height:42px;flex:0 0 42px;
-    border-radius:50%;object-fit:cover;
-    background:var(--blue-tint);color:var(--blue);
-    display:flex;align-items:center;justify-content:center;
-    font-weight:600;font-size:18px;overflow:hidden;
-  }
+  .row{display:flex;align-items:center;gap:13px;padding:14px 2px;border-bottom:1px solid var(--line)}
+  .logo{width:42px;height:42px;flex:0 0 42px;border-radius:50%;object-fit:cover;background:var(--blue-tint);color:var(--blue);display:flex;align-items:center;justify-content:center;font-weight:600;font-size:18px;overflow:hidden}
   .row-body{min-width:0;flex:1}
   .row-name{font-weight:500;font-size:16.5px;line-height:1.4}
   .row-note{color:var(--muted);font-size:13.5px;line-height:1.5}
 
-  /* ---------- النموذج ---------- */
   .field{margin-bottom:15px}
   label{display:block;font-size:14px;font-weight:500;margin-bottom:6px}
   .hint{color:var(--muted);font-weight:400}
-  input,textarea{
-    width:100%;font-family:var(--font);font-size:16px;color:var(--ink);
-    background:#fff;border:1px solid var(--line);border-radius:8px;
-    padding:11px 13px;transition:border-color .15s,box-shadow .15s;
-  }
+  input,textarea{width:100%;font-family:var(--font);font-size:16px;color:var(--ink);background:#fff;border:1px solid var(--line);border-radius:8px;padding:11px 13px;transition:border-color .15s,box-shadow .15s}
   textarea{resize:vertical;min-height:84px;line-height:1.6}
   input:focus,textarea:focus{outline:none;border-color:var(--blue);box-shadow:0 0 0 3px rgba(29,78,216,.12)}
   input:focus-visible,textarea:focus-visible,button:focus-visible{outline:2px solid var(--blue);outline-offset:2px}
 
-  button{
-    font-family:var(--font);font-weight:600;font-size:15.5px;color:#fff;
-    background:var(--blue);border:0;border-radius:8px;
-    padding:12px 26px;cursor:pointer;transition:background .15s;
-  }
+  button{font-family:var(--font);font-weight:600;font-size:15.5px;color:#fff;background:var(--blue);border:0;border-radius:8px;padding:12px 26px;cursor:pointer;transition:background .15s}
   button:hover{background:var(--blue-dark)}
   button[disabled]{background:#9CA3AF;cursor:default}
 
@@ -83,47 +50,29 @@
   .msg.ok{color:var(--blue)}
   .privacy{margin:16px 0 0;color:var(--muted);font-size:13px;line-height:1.6}
 
-  /* ---------- لوحة الأدمن ---------- */
-  footer{
-    margin-top:56px;padding-top:16px;border-top:1px solid var(--line);
-    display:flex;justify-content:space-between;align-items:center;gap:12px;
-    color:#9CA3AF;font-size:13px;
-  }
-  .linkish{
-    background:none;border:0;padding:0;cursor:pointer;
-    font-family:var(--font);font-size:13px;font-weight:500;color:var(--blue);
-    text-decoration:underline;text-underline-offset:3px;
-  }
+  footer{margin-top:56px;padding-top:16px;border-top:1px solid var(--line);display:flex;justify-content:space-between;align-items:center;gap:12px;color:#9CA3AF;font-size:13px}
+  .linkish{background:none;border:0;padding:0;cursor:pointer;font-family:var(--font);font-size:13px;font-weight:500;color:var(--blue);text-decoration:underline;text-underline-offset:3px}
   .linkish:hover{background:none;color:var(--blue-dark)}
 
   .admin{display:none;margin:24px 0 0}
   .admin.open{display:block}
-  .panel{
-    background:var(--blue-tint);border:1px solid #DCE7FF;
-    border-radius:12px;padding:20px 18px;margin-bottom:14px;
-  }
+  .panel{background:var(--blue-tint);border:1px solid #DCE7FF;border-radius:12px;padding:20px 18px;margin-bottom:14px}
   .panel:last-child{margin-bottom:0}
+  .panel input,.panel textarea{background:#fff}
   .gate{display:flex;gap:8px;align-items:flex-start}
-  .gate input{max-width:240px;background:#fff}
-  .gate button{padding:11px 20px;font-size:15px}
+  .gate input{flex:1;min-width:0}
+  .gate button{padding:11px 20px;font-size:15px;flex:0 0 auto}
 
   .adm-head{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:14px}
   .adm-tools{display:flex;gap:8px}
-  .adm-tools button,.mini{
-    background:#fff;color:var(--blue);border:1px solid #DCE7FF;
-    padding:6px 12px;font-size:13px;font-weight:500;border-radius:7px;
-  }
+  .adm-tools button,.mini{background:#fff;color:var(--blue);border:1px solid #DCE7FF;padding:6px 12px;font-size:13px;font-weight:500;border-radius:7px}
   .adm-tools button:hover,.mini:hover{background:#fff;border-color:var(--blue)}
 
-  .panel input,.panel textarea{background:#fff}
   .addbox .field{margin-bottom:11px}
   .addbox label{font-size:13.5px}
   .filerow{display:flex;align-items:center;gap:11px}
   .filerow input{flex:1;min-width:0}
-  .preview{
-    width:42px;height:42px;flex:0 0 42px;border-radius:50%;
-    object-fit:cover;background:#fff;border:1px solid #DCE7FF;display:none;
-  }
+  .preview{width:42px;height:42px;flex:0 0 42px;border-radius:50%;object-fit:cover;background:#fff;border:1px solid #DCE7FF;display:none}
   .addbox button.add{padding:10px 22px;font-size:15px}
 
   .feed{list-style:none;margin:0;padding:0}
@@ -136,19 +85,16 @@
   .entry-note{margin:3px 0 0;color:var(--muted);font-size:14.5px;line-height:1.6}
   .entry-when{margin:3px 0 0;color:#9CA3AF;font-size:12.5px}
   .acts{display:flex;align-items:center;gap:4px;flex:0 0 auto}
-  .del{
-    background:none;color:#9CA3AF;border:0;padding:0 6px;
-    font-size:18px;line-height:1.4;cursor:pointer;
-  }
+  .del{background:none;color:#9CA3AF;border:0;padding:0 6px;font-size:18px;line-height:1.4;cursor:pointer}
   .del:hover{background:none;color:#B42318}
   .empty{color:var(--muted);font-size:14.5px;margin:0}
   .count{color:#9CA3AF;font-size:13px;font-weight:400}
 
-  .pwbox{margin-top:4px}
   .pwbox summary{cursor:pointer;font-size:14px;font-weight:500;color:var(--blue)}
   .pwnote{margin:8px 0 10px;color:var(--muted);font-size:13px;line-height:1.6}
   .pwnote code{background:#fff;border:1px solid #DCE7FF;border-radius:4px;padding:1px 5px;font-size:12.5px}
   .pwbox textarea{font-family:ui-monospace,Menlo,Consolas,monospace}
+  .tokenstate{margin:8px 0 0;font-size:13px;color:var(--muted)}
 </style>
 </head>
 <body>
@@ -198,14 +144,22 @@
 
     <div id="panels" style="display:none">
 
-      <div class="panel addbox">
+      <div class="panel">
         <div class="adm-head">
-          <h2 style="margin:0">المطاعم اللي أجربها</h2>
+          <h2 style="margin:0">توكن GitHub</h2>
           <div class="adm-tools"><button id="lock" type="button">خروج</button></div>
         </div>
+        <p class="pwnote">مطلوب عشان تعدّل قائمة المطاعم. ينحفظ في متصفحك أنت فقط، وما يُرفع مع الموقع.</p>
+        <div class="gate">
+          <input id="token" type="password" dir="ltr" autocomplete="off" placeholder="github_pat_…">
+          <button id="saveTok" type="button">احفظ</button>
+        </div>
+        <p class="tokenstate" id="tokState"></p>
+      </div>
 
+      <div class="panel addbox">
+        <h2 style="margin:0 0 14px">المطاعم اللي أجربها</h2>
         <ul class="feed" id="manage"></ul>
-
         <div style="margin-top:16px;padding-top:14px;border-top:1px solid #DCE7FF">
           <div class="field">
             <label for="pName">اسم المطعم</label>
@@ -230,7 +184,10 @@
       <div class="panel">
         <div class="adm-head">
           <h2 style="margin:0">الاقتراحات <span class="count" id="count"></span></h2>
-          <div class="adm-tools"><button id="export" type="button">تصدير</button></div>
+          <div class="adm-tools">
+            <button id="refresh" type="button">تحديث</button>
+            <button id="export" type="button">تصدير</button>
+          </div>
         </div>
         <ul class="feed" id="feed"></ul>
       </div>
@@ -238,7 +195,7 @@
       <div class="panel">
         <details class="pwbox">
           <summary>تغيير كلمة المرور</summary>
-          <p class="pwnote">اكتب الكلمة الجديدة، وانسخ الناتج مكان <code>AUTH</code> في الكود. الكلمة نفسها ما تنحفظ في أي مكان.</p>
+          <p class="pwnote">اكتب الكلمة الجديدة، وانسخ الناتج مكان <code>AUTH</code> في الكود، وحدّث <code>READ_KEY</code> في سكربت جوجل بنفس الكلمة.</p>
           <div class="gate">
             <input id="newPass" type="password" autocomplete="new-password" placeholder="الكلمة الجديدة">
             <button id="gen" type="button">توليد</button>
@@ -258,10 +215,25 @@
 
 <script>
 /* ==========================================================
-   كلمة مرور الأدمن — محفوظة كهاش، مو كنص صريح.
-   الطريقة: PBKDF2-HMAC-SHA256 بملح عشوائي و250 ألف تكرار.
-   الكلمة الحالية: shawarma
-   لتغييرها: ادخل اللوحة > تغيير كلمة المرور > انسخ الناتج هنا.
+   ١) إعدادات المستودع
+   ========================================================== */
+const GH = {
+  user:   "88sulaiman88",
+  repo:   "ShawarmaRate",
+  branch: "main",
+  path:   "data.json"
+};
+
+/* ==========================================================
+   ٢) رابط سكربت جوجل لاستقبال الاقتراحات
+      خلّه فاضياً لين ما تنشر السكربت (اقرأ SETUP.md)
+   ========================================================== */
+const SCRIPT_URL = "";
+
+/* ==========================================================
+   ٣) كلمة مرور الأدمن — محفوظة كهاش (PBKDF2, 250k)
+      الحالية: shawarma   ← غيّرها من داخل اللوحة
+      ونفس الكلمة تنحط في READ_KEY داخل سكربت جوجل
    ========================================================== */
 const AUTH = {
   salt: "095b1cf602b2e591d2f372ee6921efce",
@@ -269,103 +241,35 @@ const AUTH = {
   iterations: 250000
 };
 
-/* المطاعم الأولية — تظهر أول مرة فقط، وبعدها تتحكم فيها من لوحة الأدمن */
-const SEED = [
-  { name: "شاورما هاوس", logo: "", note: "" },
-];
+/* ---------- أدوات ---------- */
+const $ = id => document.getElementById(id);
+const say = (el, text, kind) => { el.textContent = text; el.className = (el.className.split(" ")[0] || "msg") + (kind ? " " + kind : ""); };
+const norm = s => s.replace(/[\s\u064B-\u0652]/g,"").replace(/[أإآ]/g,"ا").replace(/ة/g,"ه");
+const errText = e => (e && e.message) ? e.message : "خطأ غير معروف";
 
-const PIPE_KEY = "pipeline";
-let pipeline = [];
-
-/* ==========================================================
-   طبقة التخزين — تختار المتاح تلقائياً:
-   cloud  : تخزين كلود المشترك (يشتغل داخل كلود فقط)
-   local  : تخزين المتصفح، على هذا الجهاز فقط
-   memory : بدون حفظ، يروح مع تحديث الصفحة
-   ========================================================== */
-const store = (function(){
-  const cloud = typeof window !== "undefined" && window.storage
-    && typeof window.storage.set === "function";
-
-  if (cloud) return {
-    mode: "cloud",
-    async get(k, shared){ try{ return await window.storage.get(k, shared); }catch(e){ return null; } },
-    async set(k, v, shared){
-      const r = await window.storage.set(k, v, shared);
-      if (!r) throw new Error("التخزين رفض الحفظ");
-      return r;
-    },
-    async del(k, shared){ try{ await window.storage.delete(k, shared); }catch(e){} },
-    async list(pre, shared){
-      try{ const r = await window.storage.list(pre, shared); return (r && r.keys) ? r.keys : []; }
-      catch(e){ return []; }
-    }
-  };
-
-  let ls = null;
-  try{
-    window.localStorage.setItem("__probe","1");
-    window.localStorage.removeItem("__probe");
-    ls = window.localStorage;
-  }catch(e){}
-
-  if (ls){
-    const P = "shawarmarait:";
-    return {
-      mode: "local",
-      async get(k){ const v = ls.getItem(P + k); return v === null ? null : { key:k, value:v }; },
-      async set(k, v){ ls.setItem(P + k, v); return { key:k, value:v }; },
-      async del(k){ ls.removeItem(P + k); },
-      async list(pre){
-        const out = [];
-        for (let i = 0; i < ls.length; i++){
-          const key = ls.key(i);
-          if (key.indexOf(P + pre) === 0) out.push(key.slice(P.length));
-        }
-        return out;
-      }
-    };
-  }
-
-  const mem = new Map();
-  return {
-    mode: "memory",
-    async get(k){ return mem.has(k) ? { key:k, value:mem.get(k) } : null; },
-    async set(k, v){ mem.set(k, v); return { key:k, value:v }; },
-    async del(k){ mem.delete(k); },
-    async list(pre){ return [...mem.keys()].filter(k => k.indexOf(pre) === 0); }
-  };
+const safeLocal = (() => {
+  try{ localStorage.setItem("__p","1"); localStorage.removeItem("__p"); return localStorage; }
+  catch(e){ return null; }
 })();
+const mem = {};
+const keep = {
+  get: k => safeLocal ? safeLocal.getItem(k) : (mem[k] || null),
+  set: (k,v) => safeLocal ? safeLocal.setItem(k,v) : (mem[k]=v),
+  del: k => safeLocal ? safeLocal.removeItem(k) : delete mem[k]
+};
 
-const STORE_NOTE = {
-  cloud: "",
-  local: "التخزين على هذا الجهاز فقط — اقتراحات الزوار من أجهزتهم ما توصلك هنا.",
-  memory: "ما فيه تخزين متاح — أي تعديل يروح مع تحديث الصفحة."
-}[store.mode];
+/* ---------- قائمة المطاعم ---------- */
+let pipeline = [];
+let dataSha  = null;
 
-/* حفظ مع محاولة ثانية، ورسالة خطأ واضحة */
-async function putShared(key, value){
-  let last;
-  for (let i = 0; i < 2; i++){
-    try{ return await store.set(key, value, true); }
-    catch(e){ last = e; }
-    await new Promise(r => setTimeout(r, 400));
-  }
-  throw last;
-}
-
-const errText = e =>
-  (e && e.message) ? e.message : "خطأ غير معروف";
-
-/* ---------- عرض قائمة المطاعم ---------- */
 function logoEl(r){
   if (r.logo){
-    const img = document.createElement("img");
+    const img = new Image();
     img.className = "logo";
     img.src = r.logo;
     img.alt = r.name;
     img.loading = "lazy";
-    img.onerror = () => { img.replaceWith(letterEl(r)); };
+    img.onerror = () => img.replaceWith(letterEl(r));
     return img;
   }
   return letterEl(r);
@@ -378,7 +282,7 @@ function letterEl(r){
 }
 
 function renderPipeline(){
-  const stack = document.getElementById("stack");
+  const stack = $("stack");
   stack.innerHTML = "";
   if (!pipeline.length){
     const li = document.createElement("li");
@@ -407,84 +311,118 @@ function renderPipeline(){
   });
 }
 
+/* قراءة عامة بدون توكن */
 async function loadPipeline(){
+  const url = "https://raw.githubusercontent.com/" + GH.user + "/" + GH.repo +
+              "/" + GH.branch + "/" + GH.path + "?t=" + Date.now();
   try{
-    const res = await store.get(PIPE_KEY, true);
-    pipeline = res ? JSON.parse(res.value) : SEED.slice();
+    const res = await fetch(url, { cache:"no-store" });
+    if (!res.ok) throw new Error("HTTP " + res.status);
+    const json = await res.json();
+    pipeline = Array.isArray(json) ? json : (json.restaurants || []);
   }catch(e){
-    pipeline = SEED.slice();
+    pipeline = [];
   }
   renderPipeline();
 }
 
-async function savePipeline(){
-  const payload = JSON.stringify(pipeline);
-  const kb = Math.round(payload.length / 1024);
-  if (payload.length > 4.5 * 1024 * 1024) throw new Error("حجم القائمة كبير (" + kb + "KB)");
-  await putShared(PIPE_KEY, payload);
+/* كتابة بالتوكن */
+const apiUrl = () => "https://api.github.com/repos/" + GH.user + "/" + GH.repo + "/contents/" + GH.path;
+
+function b64(str){
+  const bytes = new TextEncoder().encode(str);
+  let bin = "";
+  bytes.forEach(b => bin += String.fromCharCode(b));
+  return btoa(bin);
+}
+
+async function ghHeaders(){
+  const t = keep.get("gh_token");
+  if (!t) throw new Error("ما فيه توكن محفوظ");
+  return { "Authorization":"Bearer " + t, "Accept":"application/vnd.github+json" };
+}
+
+async function fetchSha(){
+  const res = await fetch(apiUrl() + "?ref=" + GH.branch, { headers: await ghHeaders(), cache:"no-store" });
+  if (res.status === 404) return null;
+  if (res.status === 401) throw new Error("التوكن غير صالح");
+  if (!res.ok) throw new Error("HTTP " + res.status);
+  const j = await res.json();
+  return j.sha;
+}
+
+async function savePipeline(message){
+  const sha = await fetchSha();
+  const body = {
+    message: message || "تحديث قائمة المطاعم",
+    content: b64(JSON.stringify(pipeline, null, 2)),
+    branch: GH.branch
+  };
+  if (sha) body.sha = sha;
+  const res = await fetch(apiUrl(), {
+    method: "PUT",
+    headers: Object.assign(await ghHeaders(), { "Content-Type":"application/json" }),
+    body: JSON.stringify(body)
+  });
+  if (res.status === 401) throw new Error("التوكن غير صالح");
+  if (res.status === 403) throw new Error("التوكن ما عنده صلاحية الكتابة");
+  if (res.status === 409) throw new Error("تعارض — حدّث الصفحة وأعد المحاولة");
+  if (!res.ok){
+    let d = ""; try{ d = (await res.json()).message || ""; }catch(e){}
+    throw new Error("HTTP " + res.status + (d ? " — " + d : ""));
+  }
+  const j = await res.json();
+  dataSha = j.content && j.content.sha;
 }
 
 /* ---------- إرسال الاقتراح ---------- */
-const msgEl = document.getElementById("msg");
-const btn   = document.getElementById("send");
-
-function say(el, text, kind){
-  el.textContent = text;
-  el.className = "msg" + (kind ? " " + kind : "");
-}
-
-const norm = s => s.replace(/[\s\u064B-\u0652]/g,"").replace(/[أإآ]/g,"ا").replace(/ة/g,"ه");
+const msgEl = $("msg"), sendBtn = $("send");
 
 async function submit(){
-  const place = document.getElementById("place").value.trim();
-  const who   = document.getElementById("who").value.trim();
-  const note  = document.getElementById("note").value.trim();
+  const place = $("place").value.trim();
+  const who   = $("who").value.trim();
+  const note  = $("note").value.trim();
 
-  if (!place){ say(msgEl, "اكتب اسم المطعم أول.", "err"); document.getElementById("place").focus(); return; }
-  if (!who){ say(msgEl, "ناقص اسمك.", "err"); document.getElementById("who").focus(); return; }
+  if (!place){ say(msgEl, "اكتب اسم المطعم أول.", "err"); $("place").focus(); return; }
+  if (!who){ say(msgEl, "ناقص اسمك.", "err"); $("who").focus(); return; }
   if (pipeline.some(r => norm(r.name) === norm(place))){
     say(msgEl, place + " موجود بالفعل بالقائمة فوق.", "err");
     return;
   }
+  if (!SCRIPT_URL){
+    say(msgEl, "استقبال الاقتراحات مو مفعّل بعد. راجعني بعد شوي.", "err");
+    return;
+  }
 
-  const entry = {
-    id: "sug:" + Date.now() + "-" + Math.random().toString(36).slice(2,7),
-    place, who, note, t: Date.now()
-  };
-
-  btn.disabled = true;
-  btn.textContent = "جاري الإضافة…";
+  sendBtn.disabled = true;
+  sendBtn.textContent = "جاري الإرسال…";
   try{
-    await putShared(entry.id, JSON.stringify(entry));
-    document.getElementById("place").value = "";
-    document.getElementById("note").value  = "";
+    await fetch(SCRIPT_URL, {
+      method: "POST",
+      headers: { "Content-Type":"text/plain;charset=utf-8" },
+      body: JSON.stringify({ action:"add", place, who, note })
+    });
+    $("place").value = "";
+    $("note").value  = "";
     say(msgEl, "وصلني اقتراحك. شكراً يا " + who + " 🌯", "ok");
   }catch(e){
-    say(msgEl, "ما انحفظ الاقتراح: " + errText(e), "err");
+    say(msgEl, "ما انرسل الاقتراح: " + errText(e), "err");
   }finally{
-    btn.disabled = false;
-    btn.textContent = "أضف الاقتراح";
+    sendBtn.disabled = false;
+    sendBtn.textContent = "أضف الاقتراح";
   }
 }
-
-btn.addEventListener("click", submit);
-["place","who"].forEach(id =>
-  document.getElementById(id).addEventListener("keydown", e => { if (e.key === "Enter") submit(); })
-);
+sendBtn.addEventListener("click", submit);
+["place","who"].forEach(id => $(id).addEventListener("keydown", e => { if (e.key === "Enter") submit(); }));
 
 /* ---------- الدخول ---------- */
-const adminEl  = document.getElementById("admin");
-const gateCard = document.getElementById("gateCard");
-const panels   = document.getElementById("panels");
-const gateMsg  = document.getElementById("gateMsg");
-const passEl   = document.getElementById("pass");
-const feedEl   = document.getElementById("feed");
-const countEl  = document.getElementById("count");
-const manageEl = document.getElementById("manage");
-const pMsg     = document.getElementById("pMsg");
+const adminEl = $("admin"), gateCard = $("gateCard"), panels = $("panels");
+const gateMsg = $("gateMsg"), passEl = $("pass"), pMsg = $("pMsg");
+const manageEl = $("manage"), feedEl = $("feed"), countEl = $("count");
+let adminKey = "";
 let items = [];
 
-document.getElementById("adminToggle").addEventListener("click", () => {
+$("adminToggle").addEventListener("click", () => {
   adminEl.classList.toggle("open");
   if (adminEl.classList.contains("open")){
     adminEl.scrollIntoView({ behavior:"smooth", block:"center" });
@@ -496,56 +434,69 @@ const toHex   = buf => [...new Uint8Array(buf)].map(x => x.toString(16).padStart
 const fromHex = hex => new Uint8Array(hex.match(/.{2}/g).map(h => parseInt(h,16)));
 
 async function derive(password, saltHex, iterations){
-  const key = await crypto.subtle.importKey(
-    "raw", new TextEncoder().encode(password), "PBKDF2", false, ["deriveBits"]
-  );
-  const bits = await crypto.subtle.deriveBits(
-    { name:"PBKDF2", salt: fromHex(saltHex), iterations, hash:"SHA-256" }, key, 256
-  );
+  const key = await crypto.subtle.importKey("raw", new TextEncoder().encode(password), "PBKDF2", false, ["deriveBits"]);
+  const bits = await crypto.subtle.deriveBits({ name:"PBKDF2", salt: fromHex(saltHex), iterations, hash:"SHA-256" }, key, 256);
   return toHex(bits);
 }
-
 function sameHash(a, b){
   if (a.length !== b.length) return false;
-  let diff = 0;
-  for (let i = 0; i < a.length; i++) diff |= a.charCodeAt(i) ^ b.charCodeAt(i);
-  return diff === 0;
+  let d = 0;
+  for (let i = 0; i < a.length; i++) d |= a.charCodeAt(i) ^ b.charCodeAt(i);
+  return d === 0;
 }
 
 async function unlock(){
   const val = passEl.value;
   if (!val){ say(gateMsg, "اكتب كلمة المرور.", "err"); return; }
-  const btnU = document.getElementById("unlock");
-  btnU.disabled = true;
+  const b = $("unlock");
+  b.disabled = true;
   say(gateMsg, "جاري التحقق…", "");
   const hash = await derive(val, AUTH.salt, AUTH.iterations);
-  btnU.disabled = false;
+  b.disabled = false;
   if (!sameHash(hash, AUTH.hash)){ say(gateMsg, "كلمة المرور غير صحيحة.", "err"); return; }
+  adminKey = val;
   passEl.value = "";
   say(gateMsg, "", "");
-  try{ await store.set("admin-session", "1", false); }catch(e){}
+  keep.set("admin-session", "1");
+  keep.set("admin-key", val);
   openPanel();
 }
 
-async function openPanel(){
+function openPanel(){
   gateCard.style.display = "none";
   panels.style.display = "";
   adminEl.classList.add("open");
+  showTokenState();
   renderManage();
-  if (STORE_NOTE) say(pMsg, STORE_NOTE, "err");
-  feedEl.innerHTML = '<li class="empty">جاري التحميل…</li>';
-  await loadSuggestions();
+  loadSuggestions();
 }
 
-document.getElementById("unlock").addEventListener("click", unlock);
+$("unlock").addEventListener("click", unlock);
 passEl.addEventListener("keydown", e => { if (e.key === "Enter") unlock(); });
 
-document.getElementById("lock").addEventListener("click", async () => {
-  try{ await store.del("admin-session", false); }catch(e){}
+$("lock").addEventListener("click", () => {
+  keep.del("admin-session");
+  keep.del("admin-key");
+  adminKey = "";
+  items = [];
   panels.style.display = "none";
   gateCard.style.display = "";
   adminEl.classList.remove("open");
-  items = [];
+});
+
+/* ---------- التوكن ---------- */
+function showTokenState(){
+  const t = keep.get("gh_token");
+  $("tokState").textContent = t
+    ? "محفوظ (…" + t.slice(-6) + ") — التعديل على القائمة شغّال."
+    : "ما فيه توكن — تقدر تشوف القائمة بس ما تقدر تعدّلها.";
+}
+$("saveTok").addEventListener("click", () => {
+  const v = $("token").value.trim();
+  if (!v){ keep.del("gh_token"); showTokenState(); return; }
+  keep.set("gh_token", v);
+  $("token").value = "";
+  showTokenState();
 });
 
 /* ---------- إدارة المطاعم ---------- */
@@ -558,7 +509,6 @@ function renderManage(){
   pipeline.forEach((r, idx) => {
     const li = document.createElement("li");
     li.className = "entry";
-
     const body = document.createElement("div");
     body.className = "entry-body";
     const nm = document.createElement("div");
@@ -571,7 +521,6 @@ function renderManage(){
       p.textContent = r.note;
       body.appendChild(p);
     }
-
     const del = document.createElement("button");
     del.className = "del";
     del.type = "button";
@@ -583,9 +532,8 @@ function renderManage(){
       const backup = pipeline.slice();
       pipeline.splice(idx, 1);
       try{
-        await savePipeline();
-        renderManage();
-        renderPipeline();
+        await savePipeline("حذف " + r.name);
+        renderManage(); renderPipeline();
         say(pMsg, "انحذف " + r.name + ".", "ok");
       }catch(e){
         pipeline = backup;
@@ -593,15 +541,13 @@ function renderManage(){
         say(pMsg, "ما انحذف: " + errText(e), "err");
       }
     });
-
     li.append(logoEl(r), body, del);
     manageEl.appendChild(li);
   });
 }
 
-/* معاينة اللوقو من الرابط */
-const prevEl = document.getElementById("pPrev");
-document.getElementById("pLogo").addEventListener("input", e => {
+const prevEl = $("pPrev");
+$("pLogo").addEventListener("input", e => {
   const url = e.target.value.trim();
   if (!url){ prevEl.style.display = "none"; return; }
   prevEl.onerror = () => { prevEl.style.display = "none"; };
@@ -609,25 +555,22 @@ document.getElementById("pLogo").addEventListener("input", e => {
   prevEl.src = url;
 });
 
-document.getElementById("pAdd").addEventListener("click", async () => {
-  const nameEl = document.getElementById("pName");
-  const noteEl = document.getElementById("pNote");
-  const urlEl  = document.getElementById("pLogo");
+$("pAdd").addEventListener("click", async () => {
+  const nameEl = $("pName"), noteEl = $("pNote"), urlEl = $("pLogo");
   const name = nameEl.value.trim();
   if (!name){ say(pMsg, "اكتب اسم المطعم.", "err"); nameEl.focus(); return; }
   if (pipeline.some(r => norm(r.name) === norm(name))){ say(pMsg, name + " موجود بالقائمة.", "err"); return; }
 
-  const b = document.getElementById("pAdd");
+  const b = $("pAdd");
   b.disabled = true;
   b.textContent = "جاري الحفظ…";
   const backup = pipeline.slice();
   pipeline.push({ name, logo: urlEl.value.trim(), note: noteEl.value.trim() });
   try{
-    await savePipeline();
+    await savePipeline("إضافة " + name);
     nameEl.value = noteEl.value = urlEl.value = "";
     prevEl.style.display = "none";
-    renderManage();
-    renderPipeline();
+    renderManage(); renderPipeline();
     say(pMsg, "انضاف " + name + ".", "ok");
   }catch(e){
     pipeline = backup;
@@ -651,7 +594,6 @@ function renderFeed(){
   items.forEach(it => {
     const li = document.createElement("li");
     li.className = "entry";
-
     const body = document.createElement("div");
     body.className = "entry-body";
     const top = document.createElement("div");
@@ -683,21 +625,18 @@ function renderFeed(){
     add.type = "button";
     add.textContent = "أضفه للقائمة";
     add.addEventListener("click", async () => {
-      if (pipeline.some(r => norm(r.name) === norm(it.place))){
-        add.textContent = "موجود";
-        return;
-      }
+      if (pipeline.some(r => norm(r.name) === norm(it.place))){ add.textContent = "موجود"; return; }
       add.disabled = true;
       const backup = pipeline.slice();
-      pipeline.push({ name: it.place, logo: "", note: "" });
+      pipeline.push({ name: it.place, logo:"", note:"" });
       try{
-        await savePipeline();
-        renderManage();
-        renderPipeline();
+        await savePipeline("إضافة " + it.place);
+        renderManage(); renderPipeline();
         add.textContent = "انضاف";
       }catch(e){
         pipeline = backup;
         add.disabled = false;
+        say(pMsg, "ما انحفظ: " + errText(e), "err");
       }
     });
 
@@ -705,12 +644,15 @@ function renderFeed(){
     del.className = "del";
     del.type = "button";
     del.title = "حذف";
-    del.setAttribute("aria-label", "حذف اقتراح " + it.place);
     del.textContent = "×";
     del.addEventListener("click", async () => {
       del.disabled = true;
       try{
-        await store.del(it.id, true);
+        await fetch(SCRIPT_URL, {
+          method:"POST",
+          headers:{ "Content-Type":"text/plain;charset=utf-8" },
+          body: JSON.stringify({ action:"delete", key: adminKey, id: it.id })
+        });
         items = items.filter(x => x.id !== it.id);
         renderFeed();
       }catch(e){ del.disabled = false; }
@@ -723,24 +665,24 @@ function renderFeed(){
 }
 
 async function loadSuggestions(){
-  try{
-    const keys = await store.list("sug:", true);
-    const got = await Promise.all(keys.map(async k => {
-      try{
-        const r = await store.get(k, true);
-        return r ? JSON.parse(r.value) : null;
-      }catch(e){ return null; }
-    }));
-    items = got.filter(Boolean).sort((a,b) => b.t - a.t);
-  }catch(e){
-    items = [];
-    feedEl.innerHTML = '<li class="empty">ما قدرت أجيب الاقتراحات. حدّث الصفحة.</li>';
+  if (!SCRIPT_URL){
+    feedEl.innerHTML = '<li class="empty">رابط سكربت جوجل مو محدد بعد — راجع SETUP.md.</li>';
     return;
   }
-  renderFeed();
+  feedEl.innerHTML = '<li class="empty">جاري التحميل…</li>';
+  try{
+    const res = await fetch(SCRIPT_URL + "?key=" + encodeURIComponent(adminKey) + "&t=" + Date.now());
+    const j = await res.json();
+    if (j.error) throw new Error(j.error === "unauthorized" ? "المفتاح غير مطابق لـ READ_KEY في السكربت" : j.error);
+    items = (j.items || []).sort((a,b) => b.t - a.t);
+    renderFeed();
+  }catch(e){
+    feedEl.innerHTML = '<li class="empty">ما قدرت أجيب الاقتراحات: ' + errText(e) + '</li>';
+  }
 }
+$("refresh").addEventListener("click", loadSuggestions);
 
-document.getElementById("export").addEventListener("click", () => {
+$("export").addEventListener("click", () => {
   if (!items.length) return;
   const rows = [["المطعم","المقترح","ملاحظات","التاريخ"]]
     .concat(items.map(i => [i.place, i.who, i.note || "", fmt(i.t)]));
@@ -754,21 +696,14 @@ document.getElementById("export").addEventListener("click", () => {
 });
 
 /* ---------- تغيير كلمة المرور ---------- */
-document.getElementById("gen").addEventListener("click", async () => {
-  const el  = document.getElementById("newPass");
-  const out = document.getElementById("genOut");
-  const g   = document.getElementById("gen");
+$("gen").addEventListener("click", async () => {
+  const el = $("newPass"), out = $("genOut"), g = $("gen");
   if (!el.value){ el.focus(); return; }
   g.disabled = true;
   g.textContent = "…";
   const salt = toHex(crypto.getRandomValues(new Uint8Array(16)));
   const hash = await derive(el.value, salt, AUTH.iterations);
-  out.value =
-    'const AUTH = {\n' +
-    '  salt: "' + salt + '",\n' +
-    '  hash: "' + hash + '",\n' +
-    '  iterations: ' + AUTH.iterations + '\n' +
-    '};';
+  out.value = 'const AUTH = {\n  salt: "' + salt + '",\n  hash: "' + hash + '",\n  iterations: ' + AUTH.iterations + '\n};';
   out.style.display = "";
   out.select();
   el.value = "";
@@ -779,10 +714,10 @@ document.getElementById("gen").addEventListener("click", async () => {
 /* ---------- بدء ---------- */
 (async () => {
   await loadPipeline();
-  try{
-    const s = await store.get("admin-session", false);
-    if (s && s.value === "1") openPanel();
-  }catch(e){}
+  if (keep.get("admin-session") === "1"){
+    adminKey = keep.get("admin-key") || "";
+    openPanel();
+  }
 })();
 </script>
 </body>
