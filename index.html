@@ -111,7 +111,7 @@
     <ol class="stack" id="stack"></ol>
   </section>
 
-  <section>
+  <section id="suggestBox">
     <h2>حاب تقترح مطعم شاورما؟</h2>
     <p class="sub">أضفه هنا وبيوصلني.</p>
     <div class="field">
@@ -225,10 +225,20 @@ const GH = {
 };
 
 /* ==========================================================
-   ٢) رابط سكربت جوجل لاستقبال الاقتراحات
-      خلّه فاضياً لين ما تنشر السكربت (اقرأ SETUP.md)
+   ٢) وين تروح الاقتراحات؟ اختر واحدة:
+
+   أ) بالإيميل (الأسهل) — حط بريدك هنا:
+      أول اقتراح ترسله بيجيك إيميل تأكيد من FormSubmit،
+      تضغط الرابط اللي فيه مرة وحدة وخلاص.
+      وبعد التأكيد، بيعطيك اسم مستعار عشوائي — استبدل به
+      بريدك هنا حتى ما ينكشف للسبام.
    ========================================================== */
+const MAIL_TO = "";
+
+/* ب) أو جدول جوجل (يعطيك أرشيف ولوحة داخل الموقع) — رابط Apps Script */
 const SCRIPT_URL = "";
+
+const FORM_URL = MAIL_TO ? "https://formsubmit.co/ajax/" + MAIL_TO : "";
 
 /* ==========================================================
    ٣) كلمة مرور الأدمن — محفوظة كهاش (PBKDF2, 250k)
@@ -389,19 +399,33 @@ async function submit(){
     say(msgEl, place + " موجود بالفعل بالقائمة فوق.", "err");
     return;
   }
-  if (!SCRIPT_URL){
-    say(msgEl, "استقبال الاقتراحات مو مفعّل بعد. راجعني بعد شوي.", "err");
-    return;
-  }
-
   sendBtn.disabled = true;
   sendBtn.textContent = "جاري الإرسال…";
   try{
-    await fetch(SCRIPT_URL, {
-      method: "POST",
-      headers: { "Content-Type":"text/plain;charset=utf-8" },
-      body: JSON.stringify({ action:"add", place, who, note })
-    });
+    if (FORM_URL){
+      const res = await fetch(FORM_URL, {
+        method: "POST",
+        headers: { "Content-Type":"application/json", "Accept":"application/json" },
+        body: JSON.stringify({
+          "المطعم": place,
+          "المقترح": who,
+          "ملاحظات": note || "—",
+          _subject: "اقتراح شاورما من " + who,
+          _template: "table",
+          _captcha: "false"
+        })
+      });
+      const j = await res.json();
+      if (!res.ok || (j.success !== true && j.success !== "true")){
+        throw new Error(j.message || ("HTTP " + res.status));
+      }
+    } else {
+      await fetch(SCRIPT_URL, {
+        method: "POST",
+        headers: { "Content-Type":"text/plain;charset=utf-8" },
+        body: JSON.stringify({ action:"add", place, who, note })
+      });
+    }
     $("place").value = "";
     $("note").value  = "";
     say(msgEl, "وصلني اقتراحك. شكراً يا " + who + " 🌯", "ok");
@@ -666,7 +690,9 @@ function renderFeed(){
 
 async function loadSuggestions(){
   if (!SCRIPT_URL){
-    feedEl.innerHTML = '<li class="empty">رابط سكربت جوجل مو محدد بعد — راجع SETUP.md.</li>';
+    feedEl.innerHTML = FORM_URL
+      ? '<li class="empty">الاقتراحات تجيك على بريدك مباشرة، فما فيه قائمة هنا.</li>'
+      : '<li class="empty">ما فيه وسيلة استقبال مضبوطة بعد — راجع SETUP.md.</li>';
     return;
   }
   feedEl.innerHTML = '<li class="empty">جاري التحميل…</li>';
@@ -713,6 +739,10 @@ $("gen").addEventListener("click", async () => {
 
 /* ---------- بدء ---------- */
 (async () => {
+  /* لين ما ينضبط رابط السكربت، نخفي النموذج كاملاً
+     بدل ما نخلي الزائر يكتب ثم نرفض اقتراحه */
+  if (!FORM_URL && !SCRIPT_URL) $("suggestBox").style.display = "none";
+
   await loadPipeline();
   if (keep.get("admin-session") === "1"){
     adminKey = keep.get("admin-key") || "";
