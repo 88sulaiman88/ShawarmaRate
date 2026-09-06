@@ -119,7 +119,7 @@
   .addbox .field{margin-bottom:11px}
   .addbox label{font-size:13.5px}
   .filerow{display:flex;align-items:center;gap:11px}
-  .filerow input[type=file]{font-size:13px;padding:8px;background:#fff}
+  .filerow input{flex:1;min-width:0}
   .preview{
     width:42px;height:42px;flex:0 0 42px;border-radius:50%;
     object-fit:cover;background:#fff;border:1px solid #DCE7FF;display:none;
@@ -216,12 +216,11 @@
             <input id="pNote" type="text" maxlength="80" placeholder="الفرع، أو وش أطلب">
           </div>
           <div class="field">
-            <label for="pFile">اللوقو <span class="hint">— اختياري</span></label>
+            <label for="pLogo">رابط اللوقو <span class="hint">— اختياري، رابط صورة مباشر</span></label>
             <div class="filerow">
-              <input id="pFile" type="file" accept="image/*">
+              <input id="pLogo" type="url" dir="ltr" placeholder="https://example.com/logo.png">
               <img class="preview" id="pPrev" alt="">
             </div>
-            <input id="pLogo" type="text" style="margin-top:8px" placeholder="أو الصق رابط صورة">
           </div>
           <button class="add" id="pAdd" type="button">أضف المطعم</button>
           <p class="msg" id="pMsg" role="status" aria-live="polite"></p>
@@ -278,22 +277,78 @@ const SEED = [
 const PIPE_KEY = "pipeline";
 let pipeline = [];
 
-/* التخزين قد لا يكون متاحاً لو الملف مفتوح خارج كلود */
-const hasStore = typeof window !== "undefined" && window.storage
-  && typeof window.storage.set === "function";
+/* ==========================================================
+   طبقة التخزين — تختار المتاح تلقائياً:
+   cloud  : تخزين كلود المشترك (يشتغل داخل كلود فقط)
+   local  : تخزين المتصفح، على هذا الجهاز فقط
+   memory : بدون حفظ، يروح مع تحديث الصفحة
+   ========================================================== */
+const store = (function(){
+  const cloud = typeof window !== "undefined" && window.storage
+    && typeof window.storage.set === "function";
+
+  if (cloud) return {
+    mode: "cloud",
+    async get(k, shared){ try{ return await window.storage.get(k, shared); }catch(e){ return null; } },
+    async set(k, v, shared){
+      const r = await window.storage.set(k, v, shared);
+      if (!r) throw new Error("التخزين رفض الحفظ");
+      return r;
+    },
+    async del(k, shared){ try{ await window.storage.delete(k, shared); }catch(e){} },
+    async list(pre, shared){
+      try{ const r = await window.storage.list(pre, shared); return (r && r.keys) ? r.keys : []; }
+      catch(e){ return []; }
+    }
+  };
+
+  let ls = null;
+  try{
+    window.localStorage.setItem("__probe","1");
+    window.localStorage.removeItem("__probe");
+    ls = window.localStorage;
+  }catch(e){}
+
+  if (ls){
+    const P = "shawarmarait:";
+    return {
+      mode: "local",
+      async get(k){ const v = ls.getItem(P + k); return v === null ? null : { key:k, value:v }; },
+      async set(k, v){ ls.setItem(P + k, v); return { key:k, value:v }; },
+      async del(k){ ls.removeItem(P + k); },
+      async list(pre){
+        const out = [];
+        for (let i = 0; i < ls.length; i++){
+          const key = ls.key(i);
+          if (key.indexOf(P + pre) === 0) out.push(key.slice(P.length));
+        }
+        return out;
+      }
+    };
+  }
+
+  const mem = new Map();
+  return {
+    mode: "memory",
+    async get(k){ return mem.has(k) ? { key:k, value:mem.get(k) } : null; },
+    async set(k, v){ mem.set(k, v); return { key:k, value:v }; },
+    async del(k){ mem.delete(k); },
+    async list(pre){ return [...mem.keys()].filter(k => k.indexOf(pre) === 0); }
+  };
+})();
+
+const STORE_NOTE = {
+  cloud: "",
+  local: "التخزين على هذا الجهاز فقط — اقتراحات الزوار من أجهزتهم ما توصلك هنا.",
+  memory: "ما فيه تخزين متاح — أي تعديل يروح مع تحديث الصفحة."
+}[store.mode];
 
 /* حفظ مع محاولة ثانية، ورسالة خطأ واضحة */
 async function putShared(key, value){
-  if (!hasStore) throw new Error("التخزين غير متاح في هذا العرض");
   let last;
   for (let i = 0; i < 2; i++){
-    try{
-      const res = await window.storage.set(key, value, true);
-      if (res) return res;
-      last = new Error("التخزين رفض الحفظ");
-    }catch(e){
-      last = e;
-    }
+    try{ return await store.set(key, value, true); }
+    catch(e){ last = e; }
     await new Promise(r => setTimeout(r, 400));
   }
   throw last;
@@ -354,7 +409,7 @@ function renderPipeline(){
 
 async function loadPipeline(){
   try{
-    const res = await window.storage.get(PIPE_KEY, true);
+    const res = await store.get(PIPE_KEY, true);
     pipeline = res ? JSON.parse(res.value) : SEED.slice();
   }catch(e){
     pipeline = SEED.slice();
@@ -468,7 +523,7 @@ async function unlock(){
   if (!sameHash(hash, AUTH.hash)){ say(gateMsg, "كلمة المرور غير صحيحة.", "err"); return; }
   passEl.value = "";
   say(gateMsg, "", "");
-  try{ await window.storage.set("admin-session", "1", false); }catch(e){}
+  try{ await store.set("admin-session", "1", false); }catch(e){}
   openPanel();
 }
 
@@ -477,7 +532,7 @@ async function openPanel(){
   panels.style.display = "";
   adminEl.classList.add("open");
   renderManage();
-  if (!hasStore) say(pMsg, "التخزين غير متاح هنا — افتح الموقع من داخل كلود، لا من ملف محلي.", "err");
+  if (STORE_NOTE) say(pMsg, STORE_NOTE, "err");
   feedEl.innerHTML = '<li class="empty">جاري التحميل…</li>';
   await loadSuggestions();
 }
@@ -486,7 +541,7 @@ document.getElementById("unlock").addEventListener("click", unlock);
 passEl.addEventListener("keydown", e => { if (e.key === "Enter") unlock(); });
 
 document.getElementById("lock").addEventListener("click", async () => {
-  try{ await window.storage.delete("admin-session", false); }catch(e){}
+  try{ await store.del("admin-session", false); }catch(e){}
   panels.style.display = "none";
   gateCard.style.display = "";
   adminEl.classList.remove("open");
@@ -544,29 +599,14 @@ function renderManage(){
   });
 }
 
-/* اختيار لوقو من الجهاز — يتصغّر لـ 160 بكسل قبل الحفظ */
-let pendingLogo = "";
-document.getElementById("pFile").addEventListener("change", e => {
-  const file = e.target.files && e.target.files[0];
-  if (!file) return;
-  const reader = new FileReader();
-  reader.onload = () => {
-    const img = new Image();
-    img.onload = () => {
-      const S = 128, c = document.createElement("canvas");
-      c.width = c.height = S;
-      const ctx = c.getContext("2d");
-      const side = Math.min(img.width, img.height);
-      ctx.drawImage(img, (img.width-side)/2, (img.height-side)/2, side, side, 0, 0, S, S);
-      pendingLogo = c.toDataURL("image/jpeg", 0.75);
-      const prev = document.getElementById("pPrev");
-      prev.src = pendingLogo;
-      prev.style.display = "block";
-    };
-    img.onerror = () => say(pMsg, "ما قدرت أقرأ الصورة.", "err");
-    img.src = reader.result;
-  };
-  reader.readAsDataURL(file);
+/* معاينة اللوقو من الرابط */
+const prevEl = document.getElementById("pPrev");
+document.getElementById("pLogo").addEventListener("input", e => {
+  const url = e.target.value.trim();
+  if (!url){ prevEl.style.display = "none"; return; }
+  prevEl.onerror = () => { prevEl.style.display = "none"; };
+  prevEl.onload  = () => { prevEl.style.display = "block"; };
+  prevEl.src = url;
 });
 
 document.getElementById("pAdd").addEventListener("click", async () => {
@@ -581,13 +621,11 @@ document.getElementById("pAdd").addEventListener("click", async () => {
   b.disabled = true;
   b.textContent = "جاري الحفظ…";
   const backup = pipeline.slice();
-  pipeline.push({ name, logo: pendingLogo || urlEl.value.trim(), note: noteEl.value.trim() });
+  pipeline.push({ name, logo: urlEl.value.trim(), note: noteEl.value.trim() });
   try{
     await savePipeline();
     nameEl.value = noteEl.value = urlEl.value = "";
-    document.getElementById("pFile").value = "";
-    document.getElementById("pPrev").style.display = "none";
-    pendingLogo = "";
+    prevEl.style.display = "none";
     renderManage();
     renderPipeline();
     say(pMsg, "انضاف " + name + ".", "ok");
@@ -672,7 +710,7 @@ function renderFeed(){
     del.addEventListener("click", async () => {
       del.disabled = true;
       try{
-        await window.storage.delete(it.id, true);
+        await store.del(it.id, true);
         items = items.filter(x => x.id !== it.id);
         renderFeed();
       }catch(e){ del.disabled = false; }
@@ -686,11 +724,10 @@ function renderFeed(){
 
 async function loadSuggestions(){
   try{
-    const res = await window.storage.list("sug:", true);
-    const keys = (res && res.keys) ? res.keys : [];
+    const keys = await store.list("sug:", true);
     const got = await Promise.all(keys.map(async k => {
       try{
-        const r = await window.storage.get(k, true);
+        const r = await store.get(k, true);
         return r ? JSON.parse(r.value) : null;
       }catch(e){ return null; }
     }));
@@ -743,7 +780,7 @@ document.getElementById("gen").addEventListener("click", async () => {
 (async () => {
   await loadPipeline();
   try{
-    const s = await window.storage.get("admin-session", false);
+    const s = await store.get("admin-session", false);
     if (s && s.value === "1") openPanel();
   }catch(e){}
 })();
