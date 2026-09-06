@@ -278,6 +278,30 @@ const SEED = [
 const PIPE_KEY = "pipeline";
 let pipeline = [];
 
+/* التخزين قد لا يكون متاحاً لو الملف مفتوح خارج كلود */
+const hasStore = typeof window !== "undefined" && window.storage
+  && typeof window.storage.set === "function";
+
+/* حفظ مع محاولة ثانية، ورسالة خطأ واضحة */
+async function putShared(key, value){
+  if (!hasStore) throw new Error("التخزين غير متاح في هذا العرض");
+  let last;
+  for (let i = 0; i < 2; i++){
+    try{
+      const res = await window.storage.set(key, value, true);
+      if (res) return res;
+      last = new Error("التخزين رفض الحفظ");
+    }catch(e){
+      last = e;
+    }
+    await new Promise(r => setTimeout(r, 400));
+  }
+  throw last;
+}
+
+const errText = e =>
+  (e && e.message) ? e.message : "خطأ غير معروف";
+
 /* ---------- عرض قائمة المطاعم ---------- */
 function logoEl(r){
   if (r.logo){
@@ -339,7 +363,10 @@ async function loadPipeline(){
 }
 
 async function savePipeline(){
-  await window.storage.set(PIPE_KEY, JSON.stringify(pipeline), true);
+  const payload = JSON.stringify(pipeline);
+  const kb = Math.round(payload.length / 1024);
+  if (payload.length > 4.5 * 1024 * 1024) throw new Error("حجم القائمة كبير (" + kb + "KB)");
+  await putShared(PIPE_KEY, payload);
 }
 
 /* ---------- إرسال الاقتراح ---------- */
@@ -373,13 +400,12 @@ async function submit(){
   btn.disabled = true;
   btn.textContent = "جاري الإضافة…";
   try{
-    const ok = await window.storage.set(entry.id, JSON.stringify(entry), true);
-    if (!ok) throw new Error("no-write");
+    await putShared(entry.id, JSON.stringify(entry));
     document.getElementById("place").value = "";
     document.getElementById("note").value  = "";
     say(msgEl, "وصلني اقتراحك. شكراً يا " + who + " 🌯", "ok");
   }catch(e){
-    say(msgEl, "ما انحفظ الاقتراح. تأكد من الاتصال وجرّب مرة ثانية.", "err");
+    say(msgEl, "ما انحفظ الاقتراح: " + errText(e), "err");
   }finally{
     btn.disabled = false;
     btn.textContent = "أضف الاقتراح";
@@ -451,6 +477,7 @@ async function openPanel(){
   panels.style.display = "";
   adminEl.classList.add("open");
   renderManage();
+  if (!hasStore) say(pMsg, "التخزين غير متاح هنا — افتح الموقع من داخل كلود، لا من ملف محلي.", "err");
   feedEl.innerHTML = '<li class="empty">جاري التحميل…</li>';
   await loadSuggestions();
 }
@@ -508,7 +535,7 @@ function renderManage(){
       }catch(e){
         pipeline = backup;
         del.disabled = false;
-        say(pMsg, "ما انحذف. جرّب مرة ثانية.", "err");
+        say(pMsg, "ما انحذف: " + errText(e), "err");
       }
     });
 
@@ -526,12 +553,12 @@ document.getElementById("pFile").addEventListener("change", e => {
   reader.onload = () => {
     const img = new Image();
     img.onload = () => {
-      const S = 160, c = document.createElement("canvas");
+      const S = 128, c = document.createElement("canvas");
       c.width = c.height = S;
       const ctx = c.getContext("2d");
       const side = Math.min(img.width, img.height);
       ctx.drawImage(img, (img.width-side)/2, (img.height-side)/2, side, side, 0, 0, S, S);
-      pendingLogo = c.toDataURL("image/jpeg", 0.85);
+      pendingLogo = c.toDataURL("image/jpeg", 0.75);
       const prev = document.getElementById("pPrev");
       prev.src = pendingLogo;
       prev.style.display = "block";
@@ -566,7 +593,7 @@ document.getElementById("pAdd").addEventListener("click", async () => {
     say(pMsg, "انضاف " + name + ".", "ok");
   }catch(e){
     pipeline = backup;
-    say(pMsg, "ما انحفظ. لو اللوقو كبير، جرّب صورة أصغر.", "err");
+    say(pMsg, "ما انحفظ: " + errText(e), "err");
   }finally{
     b.disabled = false;
     b.textContent = "أضف المطعم";
