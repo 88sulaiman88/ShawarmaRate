@@ -15,23 +15,32 @@
   }
   *{box-sizing:border-box}
   body{margin:0;background:#fff;color:var(--ink);font-family:var(--font);font-size:16px;line-height:1.7;-webkit-font-smoothing:antialiased}
-  .wrap{max-width:560px;margin:0 auto;padding:52px 22px 72px}
+  .wrap{max-width:640px;margin:0 auto;padding:56px 22px 72px}
 
-  header.masthead{margin-bottom:48px}
+  header.masthead{margin-bottom:52px;text-align:center}
   .masthead h1{font-weight:700;font-size:clamp(28px,7vw,38px);line-height:1.3;margin:0 0 12px;color:var(--blue)}
-  .lede{margin:0 0 12px;max-width:46ch;color:var(--muted);font-size:16px}
+  .lede{margin:0 auto 12px;max-width:46ch;color:var(--muted);font-size:16px}
   .lede:last-child{margin-bottom:0}
 
-  h2{font-weight:600;font-size:19px;margin:0 0 4px}
+  h2{font-weight:600;font-size:21px;margin:0 0 4px}
   .sub{margin:0 0 20px;color:var(--muted);font-size:14px}
+  .center{text-align:center}
+  .center .sub{margin-bottom:26px}
   section{margin-bottom:52px}
 
-  .stack{list-style:none;margin:0;padding:0;border-top:1px solid var(--line)}
-  .row{display:flex;align-items:center;gap:13px;padding:14px 2px;border-bottom:1px solid var(--line)}
+  .stack{list-style:none;margin:26px 0 0;padding:0;display:grid;grid-template-columns:repeat(3,1fr);gap:30px 16px}
+  .tile{display:flex;flex-direction:column;align-items:center;text-align:center;gap:11px}
   .logo{width:42px;height:42px;flex:0 0 42px;border-radius:50%;object-fit:cover;background:var(--blue-tint);color:var(--blue);display:flex;align-items:center;justify-content:center;font-weight:600;font-size:18px;overflow:hidden}
-  .row-body{min-width:0;flex:1}
-  .row-name{font-weight:500;font-size:16.5px;line-height:1.4}
-  .row-note{color:var(--muted);font-size:13.5px;line-height:1.5}
+  .tile .logo{width:88px;height:88px;flex:0 0 88px;font-size:32px}
+  .tile-name{font-weight:600;font-size:16px;line-height:1.4}
+  .tile-note{color:var(--muted);font-size:13px;line-height:1.5;margin-top:-4px}
+  .stack .empty{grid-column:1 / -1;text-align:center}
+  @media (max-width:520px){
+    .stack{gap:24px 10px}
+    .tile .logo{width:64px;height:64px;flex-basis:64px;font-size:25px}
+    .tile-name{font-size:14.5px}
+    .tile-note{font-size:12px}
+  }
 
   .field{margin-bottom:15px}
   label{display:block;font-size:14px;font-weight:500;margin-bottom:6px}
@@ -41,6 +50,7 @@
   input:focus,textarea:focus{outline:none;border-color:var(--blue);box-shadow:0 0 0 3px rgba(29,78,216,.12)}
   input:focus-visible,textarea:focus-visible,button:focus-visible{outline:2px solid var(--blue);outline-offset:2px}
 
+  .center button.wide{margin:0 auto;display:block;min-width:190px}
   button{font-family:var(--font);font-weight:600;font-size:15.5px;color:#fff;background:var(--blue);border:0;border-radius:8px;padding:12px 26px;cursor:pointer;transition:background .15s}
   button:hover{background:var(--blue-dark)}
   button[disabled]{background:#9CA3AF;cursor:default}
@@ -48,11 +58,17 @@
   .msg{margin:13px 0 0;font-size:14px;min-height:1px}
   .msg.err{color:#B42318}
   .msg.ok{color:var(--blue)}
-  .privacy{margin:16px 0 0;color:var(--muted);font-size:13px;line-height:1.6}
 
-  footer{margin-top:56px;padding-top:16px;border-top:1px solid var(--line);display:flex;justify-content:space-between;align-items:center;gap:12px;color:#9CA3AF;font-size:13px}
-  .linkish{background:none;border:0;padding:0;cursor:pointer;font-family:var(--font);font-size:13px;font-weight:500;color:var(--blue);text-decoration:underline;text-underline-offset:3px}
-  .linkish:hover{background:none;color:var(--blue-dark)}
+  footer{margin-top:64px;display:flex;justify-content:center}
+  .dot{
+    width:44px;height:44px;padding:0;border:0;background:none;cursor:pointer;
+    display:flex;align-items:center;justify-content:center;
+  }
+  .dot::before{
+    content:"";width:10px;height:10px;border-radius:50%;
+    background:#C4C8D0;
+  }
+  .dot:focus-visible{outline:2px solid var(--blue);outline-offset:2px;border-radius:50%}
 
   .admin{display:none;margin:24px 0 0}
   .admin.open{display:block}
@@ -106,29 +122,28 @@
     <p class="lede">هذا الموقع بحث عن ذاك الطعم القديم… عن الشاورما البسيطة اللي ما كانت تحتاج تشرح نفسها: دجاج متبّل، ثوم أصلي، مخلل، وخبز مفرود… وبس.</p>
   </header>
 
-  <section>
-    <h2>أنا قاعد أجرّب:</h2>
+  <section class="center">
+    <h2>أنا قاعد أجرّب</h2>
     <ol class="stack" id="stack"></ol>
   </section>
 
-  <section id="suggestBox">
+  <section id="suggestBox" class="center">
     <h2>حاب تقترح مطعم شاورما؟</h2>
     <p class="sub">أضفه هنا وبيوصلني.</p>
-    <div class="field">
+    <div class="field" style="text-align:start">
       <label for="place">اسم المطعم</label>
-      <input id="place" type="text" autocomplete="off" maxlength="80" placeholder="مثال: شاورما الأصيل">
+      <input id="place" type="text" autocomplete="off" maxlength="80">
     </div>
-    <div class="field">
+    <div class="field" style="text-align:start">
       <label for="who">اسمك</label>
-      <input id="who" type="text" autocomplete="name" maxlength="40" placeholder="عشان أعرف مين اقترحه">
+      <input id="who" type="text" autocomplete="name" maxlength="40">
     </div>
-    <div class="field">
+    <div class="field" style="text-align:start">
       <label for="note">ملاحظات أخرى <span class="hint">— اختياري</span></label>
-      <textarea id="note" maxlength="400" placeholder="الفرع، وش أطلب، أفضل وقت للزيارة… أي شي يفيد"></textarea>
+      <textarea id="note" maxlength="400"></textarea>
     </div>
-    <button id="send" type="button">أضف الاقتراح</button>
+    <button id="send" class="wide" type="button">أضف الاقتراح</button>
     <p class="msg" id="msg" role="status" aria-live="polite"></p>
-    <p class="privacy">اقتراحك يوصلني أنا بس، وما يظهر لبقية الزوار.</p>
   </section>
 
   <section class="admin" id="admin" aria-label="لوحة الأدمن" style="margin-bottom:0">
@@ -182,20 +197,9 @@
       </div>
 
       <div class="panel">
-        <div class="adm-head">
-          <h2 style="margin:0">الاقتراحات <span class="count" id="count"></span></h2>
-          <div class="adm-tools">
-            <button id="refresh" type="button">تحديث</button>
-            <button id="export" type="button">تصدير</button>
-          </div>
-        </div>
-        <ul class="feed" id="feed"></ul>
-      </div>
-
-      <div class="panel">
         <details class="pwbox">
           <summary>تغيير كلمة المرور</summary>
-          <p class="pwnote">اكتب الكلمة الجديدة، وانسخ الناتج مكان <code>AUTH</code> في الكود، وحدّث <code>READ_KEY</code> في سكربت جوجل بنفس الكلمة.</p>
+          <p class="pwnote">اكتب الكلمة الجديدة، ووانسخ الناتج مكان <code>AUTH</code> في الكود.</p>
           <div class="gate">
             <input id="newPass" type="password" autocomplete="new-password" placeholder="الكلمة الجديدة">
             <button id="gen" type="button">توليد</button>
@@ -208,8 +212,7 @@
   </section>
 
   <footer>
-    <span>شاورما ريت</span>
-    <button class="linkish" id="adminToggle" type="button">دخول الأدمن</button>
+    <button class="dot" id="adminToggle" type="button" aria-label="دخول الأدمن" title=""></button>
   </footer>
 </div>
 
@@ -225,25 +228,18 @@ const GH = {
 };
 
 /* ==========================================================
-   ٢) وين تروح الاقتراحات؟ اختر واحدة:
-
-   أ) بالإيميل (الأسهل) — حط بريدك هنا:
-      أول اقتراح ترسله بيجيك إيميل تأكيد من FormSubmit،
-      تضغط الرابط اللي فيه مرة وحدة وخلاص.
-      وبعد التأكيد، بيعطيك اسم مستعار عشوائي — استبدل به
-      بريدك هنا حتى ما ينكشف للسبام.
+   ٢) بريدك — الاقتراحات تجيك عليه عبر FormSubmit
+      أول اقتراح ينرسل بيجيك إيميل تأكيد، تضغط رابطه مرة وحدة.
+      وبعد التأكيد يعطونك اسماً مستعاراً — استبدل به بريدك هنا
+      حتى ما ينكشف بريدك لبوتات السبام.
    ========================================================== */
 const MAIL_TO = "51bc167097d57b8243d6de194d852aff";
 
-/* ب) أو جدول جوجل (يعطيك أرشيف ولوحة داخل الموقع) — رابط Apps Script */
-const SCRIPT_URL = "";
-
-const FORM_URL = MAIL_TO ? "https://formsubmit.co/ajax/" + MAIL_TO : "";
+const FORM_URL = "https://formsubmit.co/ajax/" + MAIL_TO;
 
 /* ==========================================================
    ٣) كلمة مرور الأدمن — محفوظة كهاش (PBKDF2, 250k)
       الحالية: shawarma   ← غيّرها من داخل اللوحة
-      ونفس الكلمة تنحط في READ_KEY داخل سكربت جوجل
    ========================================================== */
 const AUTH = {
   salt: "095b1cf602b2e591d2f372ee6921efce",
@@ -296,27 +292,24 @@ function renderPipeline(){
   stack.innerHTML = "";
   if (!pipeline.length){
     const li = document.createElement("li");
-    li.className = "row";
-    li.innerHTML = '<p class="empty">القائمة فاضية حالياً.</p>';
+    li.className = "empty";
+    li.textContent = "القائمة فاضية حالياً.";
     stack.appendChild(li);
     return;
   }
   pipeline.forEach(r => {
     const li = document.createElement("li");
-    li.className = "row";
-    const body = document.createElement("div");
-    body.className = "row-body";
+    li.className = "tile";
     const nm = document.createElement("div");
-    nm.className = "row-name";
+    nm.className = "tile-name";
     nm.textContent = r.name;
-    body.appendChild(nm);
+    li.append(logoEl(r), nm);
     if (r.note){
       const nt = document.createElement("div");
-      nt.className = "row-note";
+      nt.className = "tile-note";
       nt.textContent = r.note;
-      body.appendChild(nt);
+      li.appendChild(nt);
     }
-    li.append(logoEl(r), body);
     stack.appendChild(li);
   });
 }
@@ -402,29 +395,21 @@ async function submit(){
   sendBtn.disabled = true;
   sendBtn.textContent = "جاري الإرسال…";
   try{
-    if (FORM_URL){
-      const res = await fetch(FORM_URL, {
-        method: "POST",
-        headers: { "Content-Type":"application/json", "Accept":"application/json" },
-        body: JSON.stringify({
-          "المطعم": place,
-          "المقترح": who,
-          "ملاحظات": note || "—",
-          _subject: "اقتراح شاورما من " + who,
-          _template: "table",
-          _captcha: "false"
-        })
-      });
-      const j = await res.json();
-      if (!res.ok || (j.success !== true && j.success !== "true")){
-        throw new Error(j.message || ("HTTP " + res.status));
-      }
-    } else {
-      await fetch(SCRIPT_URL, {
-        method: "POST",
-        headers: { "Content-Type":"text/plain;charset=utf-8" },
-        body: JSON.stringify({ action:"add", place, who, note })
-      });
+    const res = await fetch(FORM_URL, {
+      method: "POST",
+      headers: { "Content-Type":"application/json", "Accept":"application/json" },
+      body: JSON.stringify({
+        "المطعم": place,
+        "المقترح": who,
+        "ملاحظات": note || "—",
+        _subject: "اقتراح شاورما من " + who,
+        _template: "table",
+        _captcha: "false"
+      })
+    });
+    const j = await res.json();
+    if (!res.ok || (j.success !== true && j.success !== "true")){
+      throw new Error(j.message || ("HTTP " + res.status));
     }
     $("place").value = "";
     $("note").value  = "";
@@ -442,9 +427,7 @@ sendBtn.addEventListener("click", submit);
 /* ---------- الدخول ---------- */
 const adminEl = $("admin"), gateCard = $("gateCard"), panels = $("panels");
 const gateMsg = $("gateMsg"), passEl = $("pass"), pMsg = $("pMsg");
-const manageEl = $("manage"), feedEl = $("feed"), countEl = $("count");
-let adminKey = "";
-let items = [];
+const manageEl = $("manage");
 
 $("adminToggle").addEventListener("click", () => {
   adminEl.classList.toggle("open");
@@ -478,11 +461,9 @@ async function unlock(){
   const hash = await derive(val, AUTH.salt, AUTH.iterations);
   b.disabled = false;
   if (!sameHash(hash, AUTH.hash)){ say(gateMsg, "كلمة المرور غير صحيحة.", "err"); return; }
-  adminKey = val;
   passEl.value = "";
   say(gateMsg, "", "");
   keep.set("admin-session", "1");
-  keep.set("admin-key", val);
   openPanel();
 }
 
@@ -492,7 +473,6 @@ function openPanel(){
   adminEl.classList.add("open");
   showTokenState();
   renderManage();
-  loadSuggestions();
 }
 
 $("unlock").addEventListener("click", unlock);
@@ -500,9 +480,6 @@ passEl.addEventListener("keydown", e => { if (e.key === "Enter") unlock(); });
 
 $("lock").addEventListener("click", () => {
   keep.del("admin-session");
-  keep.del("admin-key");
-  adminKey = "";
-  items = [];
   panels.style.display = "none";
   gateCard.style.display = "";
   adminEl.classList.remove("open");
@@ -605,122 +582,6 @@ $("pAdd").addEventListener("click", async () => {
   }
 });
 
-/* ---------- الاقتراحات ---------- */
-const fmt = t => new Date(t).toLocaleDateString("ar-SA-u-nu-latn", { year:"numeric", month:"long", day:"numeric" });
-
-function renderFeed(){
-  feedEl.innerHTML = "";
-  countEl.textContent = items.length ? "(" + items.length + ")" : "";
-  if (!items.length){
-    feedEl.innerHTML = '<li class="empty">ما وصل ولا اقتراح لين الآن.</li>';
-    return;
-  }
-  items.forEach(it => {
-    const li = document.createElement("li");
-    li.className = "entry";
-    const body = document.createElement("div");
-    body.className = "entry-body";
-    const top = document.createElement("div");
-    top.className = "entry-top";
-    const nm = document.createElement("span");
-    nm.className = "entry-name";
-    nm.textContent = it.place;
-    const by = document.createElement("span");
-    by.className = "entry-by";
-    by.textContent = "اقتراح " + it.who;
-    top.append(nm, by);
-    body.appendChild(top);
-    if (it.note){
-      const p = document.createElement("p");
-      p.className = "entry-note";
-      p.textContent = it.note;
-      body.appendChild(p);
-    }
-    const when = document.createElement("p");
-    when.className = "entry-when";
-    when.textContent = fmt(it.t);
-    body.appendChild(when);
-
-    const acts = document.createElement("div");
-    acts.className = "acts";
-
-    const add = document.createElement("button");
-    add.className = "mini";
-    add.type = "button";
-    add.textContent = "أضفه للقائمة";
-    add.addEventListener("click", async () => {
-      if (pipeline.some(r => norm(r.name) === norm(it.place))){ add.textContent = "موجود"; return; }
-      add.disabled = true;
-      const backup = pipeline.slice();
-      pipeline.push({ name: it.place, logo:"", note:"" });
-      try{
-        await savePipeline("إضافة " + it.place);
-        renderManage(); renderPipeline();
-        add.textContent = "انضاف";
-      }catch(e){
-        pipeline = backup;
-        add.disabled = false;
-        say(pMsg, "ما انحفظ: " + errText(e), "err");
-      }
-    });
-
-    const del = document.createElement("button");
-    del.className = "del";
-    del.type = "button";
-    del.title = "حذف";
-    del.textContent = "×";
-    del.addEventListener("click", async () => {
-      del.disabled = true;
-      try{
-        await fetch(SCRIPT_URL, {
-          method:"POST",
-          headers:{ "Content-Type":"text/plain;charset=utf-8" },
-          body: JSON.stringify({ action:"delete", key: adminKey, id: it.id })
-        });
-        items = items.filter(x => x.id !== it.id);
-        renderFeed();
-      }catch(e){ del.disabled = false; }
-    });
-
-    acts.append(add, del);
-    li.append(body, acts);
-    feedEl.appendChild(li);
-  });
-}
-
-async function loadSuggestions(){
-  if (!SCRIPT_URL){
-    feedEl.innerHTML = FORM_URL
-      ? '<li class="empty">الاقتراحات تجيك على بريدك مباشرة، فما فيه قائمة هنا.</li>'
-      : '<li class="empty">ما فيه وسيلة استقبال مضبوطة بعد — راجع SETUP.md.</li>';
-    return;
-  }
-  feedEl.innerHTML = '<li class="empty">جاري التحميل…</li>';
-  try{
-    const res = await fetch(SCRIPT_URL + "?key=" + encodeURIComponent(adminKey) + "&t=" + Date.now());
-    const j = await res.json();
-    if (j.error) throw new Error(j.error === "unauthorized" ? "المفتاح غير مطابق لـ READ_KEY في السكربت" : j.error);
-    items = (j.items || []).sort((a,b) => b.t - a.t);
-    renderFeed();
-  }catch(e){
-    feedEl.innerHTML = '<li class="empty">ما قدرت أجيب الاقتراحات: ' + errText(e) + '</li>';
-  }
-}
-$("refresh").addEventListener("click", loadSuggestions);
-
-$("export").addEventListener("click", () => {
-  if (!items.length) return;
-  const rows = [["المطعم","المقترح","ملاحظات","التاريخ"]]
-    .concat(items.map(i => [i.place, i.who, i.note || "", fmt(i.t)]));
-  const csv = "\ufeff" + rows.map(r => r.map(c => '"' + String(c).replace(/"/g,'""') + '"').join(",")).join("\n");
-  const url = URL.createObjectURL(new Blob([csv], { type:"text/csv;charset=utf-8" }));
-  const a = document.createElement("a");
-  a.href = url;
-  a.download = "shawarma-suggestions.csv";
-  a.click();
-  URL.revokeObjectURL(url);
-});
-
 /* ---------- تغيير كلمة المرور ---------- */
 $("gen").addEventListener("click", async () => {
   const el = $("newPass"), out = $("genOut"), g = $("gen");
@@ -739,15 +600,8 @@ $("gen").addEventListener("click", async () => {
 
 /* ---------- بدء ---------- */
 (async () => {
-  /* لين ما ينضبط رابط السكربت، نخفي النموذج كاملاً
-     بدل ما نخلي الزائر يكتب ثم نرفض اقتراحه */
-  if (!FORM_URL && !SCRIPT_URL) $("suggestBox").style.display = "none";
-
   await loadPipeline();
-  if (keep.get("admin-session") === "1"){
-    adminKey = keep.get("admin-key") || "";
-    openPanel();
-  }
+  if (keep.get("admin-session") === "1") openPanel();
 })();
 </script>
 </body>
