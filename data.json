@@ -1,3 +1,12 @@
 [
-  { "name": "شاورما هاوس", "logo": "", "note": "" }
+  {
+    "name": "شاورما هاوس",
+    "logo": "",
+    "note": ""
+  },
+  {
+    "name": "غصن السنبلة",
+    "logo": "https://saudiarestaurants.com/wp-content/uploads/2023/01/%D8%BA%D8%B5%D9%86-%D8%A7%D9%84%D8%B3%D9%86%D8%A8%D9%84%D8%A9.png",
+    "note": ""
+  }
 ]
