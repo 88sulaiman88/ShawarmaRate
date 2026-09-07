@@ -441,8 +441,8 @@ const FORM_URL = "https://formsubmit.co/ajax/" + MAIL_TO;
       الحالية: shawarma   ← غيّرها من داخل اللوحة
    ========================================================== */
 const AUTH = {
-  salt: "095b1cf602b2e591d2f372ee6921efce",
-  hash: "83dc4882b5414f2cb4931f48dbcfda567e50761857d141812faec2d80df75bb3",
+  salt: "d512b348e91c8f35adbd836052c762a6",
+  hash: "abbe6550fbbdc2fe4c45f3736bf74ae69e87b9e24c2ec276715000798d585883",
   iterations: 250000
 };
 
@@ -450,7 +450,11 @@ const AUTH = {
    ٤) التوكن مشفّراً بكلمة المرور — ولّده من داخل اللوحة
       وانسخ الناتج مكان TOKEN_ENC هنا.
    ========================================================== */
-const TOKEN_ENC = { salt: "", iv: "", data: "" };
+const TOKEN_ENC = {
+  salt: "e5bb417c6bcf1fdff84666f202d280df",
+  iv:   "ce483f35ba45630abd332874",
+  data: "4c9ef4128cfa8560560fedfbc35407056777eeb9c6546e8e4586ffb533971254d79810efdc9250b0feb389324232b7b8236d46f60eb78a9c152f1fdfb3c4bfa9ccc3152992f70c3012772199d80aed6f87f7da133952e3049e82436250e4cb02150e6f30abd377c1584264058d"
+};
 
 /* ---------- أدوات ---------- */
 const $ = id => document.getElementById(id);
