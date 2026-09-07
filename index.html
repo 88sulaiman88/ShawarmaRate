@@ -234,7 +234,9 @@
   .pwnote{margin:8px 0 10px;color:var(--muted);font-size:13px;line-height:1.7}
   .pwnote code{background:#fff;border:1px solid var(--line);border-radius:3px;padding:1px 5px;font-size:12.5px}
   .pwbox textarea{font-family:ui-monospace,Menlo,Consolas,monospace}
-  .tokenstate{margin:8px 0 0;font-size:13px;color:var(--muted)}
+  .tokenstate{margin:8px 0 0;font-size:13px;color:var(--muted);display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+  .tokenstate:empty{margin:0}
+  .tokenstate .mini{padding:4px 10px;font-size:12.5px}
 
   @media (max-width:520px){
     .wrap{padding:0 20px}
@@ -295,7 +297,7 @@
           <li>شاورما صاج</li>
           <li>ميني شاورما</li>
           <li>صحن شاورما</li>
-          <li>صوصات </li>
+          <li>صوصات</li>
         </ul>
       </div>
     </div>
@@ -343,12 +345,25 @@
           <h2>توكن GitHub</h2>
           <div class="adm-tools"><button id="lock" type="button">خروج</button></div>
         </div>
-        <p class="pwnote">مطلوب عشان تعدّل قائمة المطاعم. ينحفظ في متصفحك أنت فقط، وما يُرفع مع الموقع.</p>
-        <div class="gate">
-          <input id="token" type="password" dir="ltr" autocomplete="off" placeholder="github_pat_…">
-          <button id="saveTok" type="button">احفظ</button>
-        </div>
         <p class="tokenstate" id="tokState"></p>
+
+        <div id="tokForm">
+          <p class="pwnote">التوكن مو مربوط بكلمة المرور بعد. الصقه هنا لاستخدام مؤقت على هذا الجهاز، أو اربطه بالأسفل ليشتغل من أي جهاز.</p>
+          <div class="gate">
+            <input id="token" type="password" dir="ltr" autocomplete="off" placeholder="github_pat_…">
+            <button id="saveTok" type="button">احفظ</button>
+          </div>
+        </div>
+
+        <details class="pwbox" id="linkBox" style="margin-top:14px">
+          <summary>اربط التوكن بكلمة المرور</summary>
+          <p class="pwnote">التوكن ينشفّر بكلمة مرورك (AES-GCM بمفتاح مشتق منها) وينحفظ داخل الكود. بعدها تدخل بكلمة المرور وحدها من أي جهاز. لو غيّرت كلمة المرور لاحقاً، أعد الربط.</p>
+          <div class="gate">
+            <input id="linkTok" type="password" dir="ltr" autocomplete="off" placeholder="github_pat_…">
+            <button id="linkGen" type="button">شفّر</button>
+          </div>
+          <textarea id="linkOut" rows="6" readonly style="display:none;margin-top:10px;font-size:13px;direction:ltr;text-align:left"></textarea>
+        </details>
       </div>
 
       <div class="panel addbox">
@@ -378,11 +393,16 @@
       <div class="panel">
         <details class="pwbox">
           <summary>تغيير كلمة المرور</summary>
-          <p class="pwnote">اكتب الكلمة الجديدة، وانسخ الناتج مكان <code>AUTH</code> في الكود.</p>
-          <div class="gate">
-            <input id="newPass" type="password" autocomplete="new-password" placeholder="الكلمة الجديدة">
-            <button id="gen" type="button">توليد</button>
+          <p class="pwnote">اكتب الكلمة الجديدة ويطلع لك <code>AUTH</code> و<code>TOKEN_ENC</code> جاهزين عليها. انسخ الاثنين مكان القديمين وارفع الملف.</p>
+          <div class="field">
+            <label for="newPass">الكلمة الجديدة</label>
+            <input id="newPass" type="password" autocomplete="new-password">
           </div>
+          <div class="field" id="newTokField">
+            <label for="newTok">توكن GitHub <span class="hint" id="newTokHint"></span></label>
+            <input id="newTok" type="password" dir="ltr" autocomplete="off" placeholder="github_pat_…">
+          </div>
+          <button id="gen" type="button">توليد</button>
           <textarea id="genOut" rows="5" readonly style="display:none;margin-top:10px;font-size:13px;direction:ltr;text-align:left"></textarea>
         </details>
       </div>
@@ -425,6 +445,12 @@ const AUTH = {
   hash: "83dc4882b5414f2cb4931f48dbcfda567e50761857d141812faec2d80df75bb3",
   iterations: 250000
 };
+
+/* ==========================================================
+   ٤) التوكن مشفّراً بكلمة المرور — ولّده من داخل اللوحة
+      وانسخ الناتج مكان TOKEN_ENC هنا.
+   ========================================================== */
+const TOKEN_ENC = { salt: "", iv: "", data: "" };
 
 /* ---------- أدوات ---------- */
 const $ = id => document.getElementById(id);
@@ -529,8 +555,8 @@ function b64(str){
 }
 
 async function ghHeaders(){
-  const t = keep.get("gh_token");
-  if (!t) throw new Error("ما فيه توكن محفوظ");
+  const t = sessionToken || keep.get("gh_token");
+  if (!t) throw new Error("ما فيه توكن — اربطه بكلمة المرور أو الصقه في اللوحة");
   return { "Authorization":"Bearer " + t, "Accept":"application/vnd.github+json" };
 }
 
@@ -617,6 +643,7 @@ sendBtn.addEventListener("click", submit);
 const adminEl = $("admin"), gateCard = $("gateCard"), panels = $("panels");
 const gateMsg = $("gateMsg"), passEl = $("pass"), pMsg = $("pMsg");
 const manageEl = $("manage");
+let adminKey = "", sessionToken = "";
 
 $("adminToggle").addEventListener("click", () => {
   adminEl.classList.toggle("open");
@@ -634,6 +661,32 @@ async function derive(password, saltHex, iterations){
   const bits = await crypto.subtle.deriveBits({ name:"PBKDF2", salt: fromHex(saltHex), iterations, hash:"SHA-256" }, key, 256);
   return toHex(bits);
 }
+/* مفتاح AES مشتق من كلمة المرور */
+async function aesKeyFrom(password, saltHex){
+  const km = await crypto.subtle.importKey("raw", new TextEncoder().encode(password), "PBKDF2", false, ["deriveKey"]);
+  return crypto.subtle.deriveKey(
+    { name:"PBKDF2", salt: fromHex(saltHex), iterations: AUTH.iterations, hash:"SHA-256" },
+    km, { name:"AES-GCM", length:256 }, false, ["encrypt","decrypt"]
+  );
+}
+
+async function encryptToken(token, password){
+  const salt = toHex(crypto.getRandomValues(new Uint8Array(16)));
+  const iv   = crypto.getRandomValues(new Uint8Array(12));
+  const key  = await aesKeyFrom(password, salt);
+  const ct   = await crypto.subtle.encrypt({ name:"AES-GCM", iv }, key, new TextEncoder().encode(token));
+  return { salt, iv: toHex(iv), data: toHex(ct) };
+}
+
+async function decryptToken(password){
+  if (!TOKEN_ENC.data) return "";
+  const key = await aesKeyFrom(password, TOKEN_ENC.salt);
+  const pt  = await crypto.subtle.decrypt(
+    { name:"AES-GCM", iv: fromHex(TOKEN_ENC.iv) }, key, fromHex(TOKEN_ENC.data)
+  );
+  return new TextDecoder().decode(pt);
+}
+
 function sameHash(a, b){
   if (a.length !== b.length) return false;
   let d = 0;
@@ -650,18 +703,30 @@ async function unlock(){
   const hash = await derive(val, AUTH.salt, AUTH.iterations);
   b.disabled = false;
   if (!sameHash(hash, AUTH.hash)){ say(gateMsg, "كلمة المرور غير صحيحة.", "err"); return; }
+  adminKey = val;
   passEl.value = "";
   say(gateMsg, "", "");
   keep.set("admin-session", "1");
+  keep.set("admin-key", val);
   openPanel();
 }
 
-function openPanel(){
+async function openPanel(){
   gateCard.style.display = "none";
   panels.style.display = "";
   adminEl.classList.add("open");
-  showTokenState();
   renderManage();
+  showTokenState();
+
+  if (TOKEN_ENC.data && !sessionToken && adminKey){
+    try{
+      sessionToken = await decryptToken(adminKey);
+    }catch(e){
+      sessionToken = "";
+      say($("pMsg"), "ما قدرت أفك التوكن — كلمة المرور تغيّرت بعد الربط؟ أعد الربط.", "err");
+    }
+    showTokenState();
+  }
 }
 
 $("unlock").addEventListener("click", unlock);
@@ -669,6 +734,9 @@ passEl.addEventListener("keydown", e => { if (e.key === "Enter") unlock(); });
 
 $("lock").addEventListener("click", () => {
   keep.del("admin-session");
+  keep.del("admin-key");
+  adminKey = "";
+  sessionToken = "";
   panels.style.display = "none";
   gateCard.style.display = "";
   adminEl.classList.remove("open");
@@ -676,17 +744,66 @@ $("lock").addEventListener("click", () => {
 
 /* ---------- التوكن ---------- */
 function showTokenState(){
-  const t = keep.get("gh_token");
-  $("tokState").textContent = t
-    ? "محفوظ (…" + t.slice(-6) + ") — التعديل على القائمة شغّال."
-    : "ما فيه توكن — تقدر تشوف القائمة بس ما تقدر تعدّلها.";
+  const saved = keep.get("gh_token");
+  const form = $("tokForm"), state = $("tokState");
+  state.textContent = "";
+
+  refreshPwBox();
+
+  if (sessionToken){
+    form.style.display = "none";
+    state.textContent = "التوكن مربوط بكلمة المرور وجاهز.";
+    return;
+  }
+
+  if (saved){
+    form.style.display = "none";
+    const txt = document.createElement("span");
+    txt.textContent = "توكن محفوظ على هذا الجهاز (…" + saved.slice(-6) + ")";
+    const change = document.createElement("button");
+    change.className = "mini";
+    change.type = "button";
+    change.textContent = "تغيير";
+    change.addEventListener("click", () => { keep.del("gh_token"); showTokenState(); $("token").focus(); });
+    state.append(txt, change);
+    return;
+  }
+
+  form.style.display = "";
+  if (TOKEN_ENC.data && !adminKey){
+    state.textContent = "ادخل بكلمة المرور عشان يتفك التوكن.";
+  }
 }
+
 $("saveTok").addEventListener("click", () => {
   const v = $("token").value.trim();
-  if (!v){ keep.del("gh_token"); showTokenState(); return; }
+  if (!v){ $("token").focus(); return; }
   keep.set("gh_token", v);
   $("token").value = "";
   showTokenState();
+});
+$("token").addEventListener("keydown", e => { if (e.key === "Enter") $("saveTok").click(); });
+
+/* ربط التوكن بكلمة المرور */
+$("linkGen").addEventListener("click", async () => {
+  const el = $("linkTok"), out = $("linkOut"), b = $("linkGen");
+  const tok = el.value.trim();
+  if (!tok){ el.focus(); return; }
+  if (!adminKey){ say($("pMsg"), "ادخل بكلمة المرور أول.", "err"); return; }
+  b.disabled = true;
+  b.textContent = "…";
+  const enc = await encryptToken(tok, adminKey);
+  out.value =
+    'const TOKEN_ENC = {\n' +
+    '  salt: "' + enc.salt + '",\n' +
+    '  iv:   "' + enc.iv   + '",\n' +
+    '  data: "' + enc.data + '"\n' +
+    '};';
+  out.style.display = "";
+  out.select();
+  el.value = "";
+  b.disabled = false;
+  b.textContent = "شفّر";
 });
 
 /* ---------- إدارة المطاعم ---------- */
@@ -771,26 +888,64 @@ $("pAdd").addEventListener("click", async () => {
   }
 });
 
-/* ---------- تغيير كلمة المرور ---------- */
+/* ---------- تغيير كلمة المرور (مع إعادة ربط التوكن) ---------- */
+function currentToken(){ return sessionToken || keep.get("gh_token") || ""; }
+
+function refreshPwBox(){
+  const have = currentToken();
+  $("newTokField").style.display = have ? "none" : "";
+  $("newTokHint").textContent = have ? "" : "— محتاجه عشان يتربط بالكلمة الجديدة";
+}
+
 $("gen").addEventListener("click", async () => {
   const el = $("newPass"), out = $("genOut"), g = $("gen");
-  if (!el.value){ el.focus(); return; }
+  const pw = el.value;
+  if (!pw){ el.focus(); return; }
+
+  const tok = currentToken() || $("newTok").value.trim();
+
   g.disabled = true;
   g.textContent = "…";
+
   const salt = toHex(crypto.getRandomValues(new Uint8Array(16)));
-  const hash = await derive(el.value, salt, AUTH.iterations);
-  out.value = 'const AUTH = {\n  salt: "' + salt + '",\n  hash: "' + hash + '",\n  iterations: ' + AUTH.iterations + '\n};';
+  const hash = await derive(pw, salt, AUTH.iterations);
+  let text =
+    'const AUTH = {\n' +
+    '  salt: "' + salt + '",\n' +
+    '  hash: "' + hash + '",\n' +
+    '  iterations: ' + AUTH.iterations + '\n' +
+    '};';
+
+  if (tok){
+    const enc = await encryptToken(tok, pw);
+    text += '\n\nconst TOKEN_ENC = {\n' +
+      '  salt: "' + enc.salt + '",\n' +
+      '  iv:   "' + enc.iv   + '",\n' +
+      '  data: "' + enc.data + '"\n' +
+      '};';
+  } else {
+    text += '\n\n/* ما فيه توكن متاح الحين — اربطه بعدين من "اربط التوكن بكلمة المرور" */';
+  }
+
+  out.value = text;
   out.style.display = "";
   out.select();
   el.value = "";
+  $("newTok").value = "";
   g.disabled = false;
   g.textContent = "توليد";
+  say($("pMsg"), tok
+    ? "انسخ AUTH و TOKEN_ENC معاً، وارفع الملف، ثم ادخل بالكلمة الجديدة."
+    : "انسخ AUTH وارفع الملف. التوكن يحتاج ربطاً منفصلاً بعدها.", "ok");
 });
 
 /* ---------- بدء ---------- */
 (async () => {
   await loadPipeline();
-  if (keep.get("admin-session") === "1") openPanel();
+  if (keep.get("admin-session") === "1"){
+    adminKey = keep.get("admin-key") || "";
+    openPanel();
+  }
 })();
 </script>
 </body>
