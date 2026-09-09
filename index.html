@@ -96,6 +96,7 @@
   .tile-name{font-weight:600;font-size:15.5px;line-height:1.45}
   .tile-note{color:var(--muted);font-size:12.5px;line-height:1.5;margin-top:-6px}
   .stack .empty{grid-column:1 / -1;text-align:center}
+  .stack .empty .mini{margin-inline-start:8px;background:#fff;color:var(--blue);border:1px solid var(--line);padding:5px 11px;font-size:13px;border-radius:4px;font-weight:500}
 
   /* ٣ — التقييم */
   .soon{
@@ -441,8 +442,8 @@ const FORM_URL = "https://formsubmit.co/ajax/" + MAIL_TO;
       الحالية: shawarma   ← غيّرها من داخل اللوحة
    ========================================================== */
 const AUTH = {
-  salt: "d512b348e91c8f35adbd836052c762a6",
-  hash: "abbe6550fbbdc2fe4c45f3736bf74ae69e87b9e24c2ec276715000798d585883",
+  salt: "095b1cf602b2e591d2f372ee6921efce",
+  hash: "83dc4882b5414f2cb4931f48dbcfda567e50761857d141812faec2d80df75bb3",
   iterations: 250000
 };
 
@@ -450,11 +451,7 @@ const AUTH = {
    ٤) التوكن مشفّراً بكلمة المرور — ولّده من داخل اللوحة
       وانسخ الناتج مكان TOKEN_ENC هنا.
    ========================================================== */
-const TOKEN_ENC = {
-  salt: "e5bb417c6bcf1fdff84666f202d280df",
-  iv:   "ce483f35ba45630abd332874",
-  data: "4c9ef4128cfa8560560fedfbc35407056777eeb9c6546e8e4586ffb533971254d79810efdc9250b0feb389324232b7b8236d46f60eb78a9c152f1fdfb3c4bfa9ccc3152992f70c3012772199d80aed6f87f7da133952e3049e82436250e4cb02150e6f30abd377c1584264058d"
-};
+const TOKEN_ENC = { salt: "", iv: "", data: "" };
 
 /* ---------- أدوات ---------- */
 const $ = id => document.getElementById(id);
@@ -533,19 +530,65 @@ function renderPipeline(){
   });
 }
 
-/* قراءة عامة بدون توكن */
+/* قراءة عامة بدون توكن — مع إعادة محاولة ومصدر بديل ونسخة محفوظة */
+const RAW_URL = () => "https://raw.githubusercontent.com/" + GH.user + "/" + GH.repo +
+                      "/" + GH.branch + "/" + GH.path + "?t=" + Date.now();
+const API_RAW = () => "https://api.github.com/repos/" + GH.user + "/" + GH.repo +
+                      "/contents/" + GH.path + "?ref=" + GH.branch;
+
+async function fetchList(url, headers){
+  const res = await fetch(url, { cache:"no-store", headers });
+  if (!res.ok) throw new Error("HTTP " + res.status);
+  const json = await res.json();
+  const arr = Array.isArray(json) ? json : (json.restaurants || []);
+  if (!Array.isArray(arr)) throw new Error("صيغة غير متوقعة");
+  return arr;
+}
+
+function showListError(){
+  const stack = $("stack");
+  stack.innerHTML = "";
+  const li = document.createElement("li");
+  li.className = "empty";
+  li.textContent = "ما قدرت أجيب القائمة. ";
+  const again = document.createElement("button");
+  again.className = "mini";
+  again.type = "button";
+  again.textContent = "أعد المحاولة";
+  again.addEventListener("click", () => loadPipeline());
+  li.appendChild(again);
+  stack.appendChild(li);
+}
+
 async function loadPipeline(){
-  const url = "https://raw.githubusercontent.com/" + GH.user + "/" + GH.repo +
-              "/" + GH.branch + "/" + GH.path + "?t=" + Date.now();
-  try{
-    const res = await fetch(url, { cache:"no-store" });
-    if (!res.ok) throw new Error("HTTP " + res.status);
-    const json = await res.json();
-    pipeline = Array.isArray(json) ? json : (json.restaurants || []);
-  }catch(e){
-    pipeline = [];
+  const sources = [
+    () => fetchList(RAW_URL()),
+    () => fetchList(API_RAW(), { "Accept":"application/vnd.github.raw" })
+  ];
+
+  for (let attempt = 0; attempt < 2; attempt++){
+    for (const get of sources){
+      try{
+        pipeline = await get();
+        keep.set("list-cache", JSON.stringify(pipeline));
+        renderPipeline();
+        return;
+      }catch(e){ /* نجرب المصدر اللي بعده */ }
+    }
+    await new Promise(r => setTimeout(r, 600));
   }
-  renderPipeline();
+
+  /* كل المصادر فشلت: نعرض آخر نسخة ناجحة بدل صفحة فاضية */
+  const cached = keep.get("list-cache");
+  if (cached){
+    try{
+      pipeline = JSON.parse(cached);
+      renderPipeline();
+      return;
+    }catch(e){}
+  }
+  pipeline = [];
+  showListError();
 }
 
 /* كتابة بالتوكن */
