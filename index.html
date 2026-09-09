@@ -95,6 +95,9 @@
   .tile .logo{width:86px;height:86px;flex:0 0 86px;font-size:31px}
   .tile-name{font-weight:600;font-size:15.5px;line-height:1.45}
   .tile-note{color:var(--muted);font-size:12.5px;line-height:1.5;margin-top:-6px}
+  .tile-why{color:#B42318;font-size:12.5px;line-height:1.5;margin-top:-6px}
+  .sub-block{margin-top:58px;padding-top:46px;border-top:1px solid #DEE5EF}
+  .tile.is-out .logo{filter:grayscale(1);opacity:.75}
   .stack .empty{grid-column:1 / -1;text-align:center}
   .stack .empty .mini{margin-inline-start:8px;background:#fff;color:var(--blue);border:1px solid var(--line);padding:5px 11px;font-size:13px;border-radius:4px;font-weight:500}
 
@@ -274,6 +277,11 @@
   <div class="wrap center">
     <h2>أنا قاعد أجرّب</h2>
     <ol class="stack" id="stack"></ol>
+
+    <div class="sub-block">
+      <h2>مطاعم اقترحتوها خارج التقييم</h2>
+      <ol class="stack" id="stackOut"></ol>
+    </div>
   </div>
 </section>
 
@@ -391,6 +399,30 @@
         </div>
       </div>
 
+      <div class="panel addbox">
+        <h2 style="margin-bottom:14px">خارج التقييم</h2>
+        <ul class="feed" id="manageOut"></ul>
+        <div style="margin-top:16px;padding-top:14px;border-top:1px solid var(--line)">
+          <div class="field">
+            <label for="oName">اسم المطعم</label>
+            <input id="oName" type="text" maxlength="80" placeholder="مثال: شاورما الصاج">
+          </div>
+          <div class="field">
+            <label for="oWhy">السبب <span class="hint">— يظهر بالأحمر تحت الاسم</span></label>
+            <input id="oWhy" type="text" maxlength="60" placeholder="مثال: خبز صاج">
+          </div>
+          <div class="field">
+            <label for="oLogo">رابط اللوقو <span class="hint">— اختياري</span></label>
+            <div class="filerow">
+              <input id="oLogo" type="url" dir="ltr" placeholder="https://example.com/logo.png">
+              <img class="preview" id="oPrev" alt="">
+            </div>
+          </div>
+          <button class="add" id="oAdd" type="button">أضف للخارجين</button>
+          <p class="msg" id="oMsg" role="status" aria-live="polite"></p>
+        </div>
+      </div>
+
       <div class="panel">
         <details class="pwbox">
           <summary>تغيير كلمة المرور</summary>
@@ -481,7 +513,8 @@ const keep = {
 };
 
 /* ---------- قائمة المطاعم ---------- */
-let pipeline = [];
+let pipeline = [];   /* اللي أجربها */
+let excluded = [];   /* اللي خارج التقييم */
 let dataSha  = null;
 
 function logoEl(r){
@@ -503,31 +536,44 @@ function letterEl(r){
   return d;
 }
 
-function renderPipeline(){
-  const stack = $("stack");
-  stack.innerHTML = "";
-  if (!pipeline.length){
+function tileFor(r, isOut){
+  const li = document.createElement("li");
+  li.className = "tile" + (isOut ? " is-out" : "");
+  const nm = document.createElement("div");
+  nm.className = "tile-name";
+  nm.textContent = r.name;
+  li.append(logoEl(r), nm);
+
+  if (isOut && r.why){
+    const w = document.createElement("div");
+    w.className = "tile-why";
+    w.textContent = r.why;
+    li.appendChild(w);
+  }
+  if (!isOut && r.note){
+    const nt = document.createElement("div");
+    nt.className = "tile-note";
+    nt.textContent = r.note;
+    li.appendChild(nt);
+  }
+  return li;
+}
+
+function renderInto(el, list, isOut, emptyText){
+  el.innerHTML = "";
+  if (!list.length){
     const li = document.createElement("li");
     li.className = "empty";
-    li.textContent = "القائمة فاضية حالياً.";
-    stack.appendChild(li);
+    li.textContent = emptyText;
+    el.appendChild(li);
     return;
   }
-  pipeline.forEach(r => {
-    const li = document.createElement("li");
-    li.className = "tile";
-    const nm = document.createElement("div");
-    nm.className = "tile-name";
-    nm.textContent = r.name;
-    li.append(logoEl(r), nm);
-    if (r.note){
-      const nt = document.createElement("div");
-      nt.className = "tile-note";
-      nt.textContent = r.note;
-      li.appendChild(nt);
-    }
-    stack.appendChild(li);
-  });
+  list.forEach(r => el.appendChild(tileFor(r, isOut)));
+}
+
+function renderPipeline(){
+  renderInto($("stack"), pipeline, false, "القائمة فاضية حالياً.");
+  renderInto($("stackOut"), excluded, true, "ما فيه مطاعم مستبعدة.");
 }
 
 /* قراءة عامة بدون توكن — مع إعادة محاولة ومصدر بديل ونسخة محفوظة */
@@ -540,12 +586,16 @@ async function fetchList(url, headers){
   const res = await fetch(url, { cache:"no-store", headers });
   if (!res.ok) throw new Error("HTTP " + res.status);
   const json = await res.json();
-  const arr = Array.isArray(json) ? json : (json.restaurants || []);
-  if (!Array.isArray(arr)) throw new Error("صيغة غير متوقعة");
-  return arr;
+  /* الشكل القديم: مصفوفة. الجديد: { trying, excluded } */
+  const data = Array.isArray(json)
+    ? { trying: json, excluded: [] }
+    : { trying: json.trying || json.restaurants || [], excluded: json.excluded || [] };
+  if (!Array.isArray(data.trying) || !Array.isArray(data.excluded)) throw new Error("صيغة غير متوقعة");
+  return data;
 }
 
 function showListError(){
+  $("stackOut").innerHTML = "";
   const stack = $("stack");
   stack.innerHTML = "";
   const li = document.createElement("li");
@@ -569,8 +619,10 @@ async function loadPipeline(){
   for (let attempt = 0; attempt < 2; attempt++){
     for (const get of sources){
       try{
-        pipeline = await get();
-        keep.set("list-cache", JSON.stringify(pipeline));
+        const data = await get();
+        pipeline = data.trying;
+        excluded = data.excluded;
+        keep.set("list-cache", JSON.stringify(data));
         renderPipeline();
         return;
       }catch(e){ /* نجرب المصدر اللي بعده */ }
@@ -582,12 +634,14 @@ async function loadPipeline(){
   const cached = keep.get("list-cache");
   if (cached){
     try{
-      pipeline = JSON.parse(cached);
+      const data = JSON.parse(cached);
+      pipeline = Array.isArray(data) ? data : (data.trying || []);
+      excluded = Array.isArray(data) ? [] : (data.excluded || []);
       renderPipeline();
       return;
     }catch(e){}
   }
-  pipeline = [];
+  pipeline = []; excluded = [];
   showListError();
 }
 
@@ -620,7 +674,7 @@ async function savePipeline(message){
   const sha = await fetchSha();
   const body = {
     message: message || "تحديث قائمة المطاعم",
-    content: b64(JSON.stringify(pipeline, null, 2)),
+    content: b64(JSON.stringify({ trying: pipeline, excluded }, null, 2)),
     branch: GH.branch
   };
   if (sha) body.sha = sha;
@@ -650,8 +704,11 @@ async function submit(){
 
   if (!place){ say(msgEl, "اكتب اسم المطعم أول.", "err"); $("place").focus(); return; }
   if (!who){ say(msgEl, "ناقص اسمك.", "err"); $("who").focus(); return; }
-  if (pipeline.some(r => norm(r.name) === norm(place))){
-    say(msgEl, place + " موجود بالفعل ضمن قائمة التجربة.", "err");
+  const found = findPlace(place);
+  if (found){
+    say(msgEl, found.where === "trying"
+      ? place + " موجود بالفعل ضمن قائمة التجربة."
+      : place + " خارج التقييم" + (found.item.why ? " — " + found.item.why : "") + ".", "err");
     return;
   }
   sendBtn.disabled = true;
@@ -854,27 +911,32 @@ $("linkGen").addEventListener("click", async () => {
 });
 
 /* ---------- إدارة المطاعم ---------- */
-function renderManage(){
-  manageEl.innerHTML = "";
-  if (!pipeline.length){
-    manageEl.innerHTML = '<li class="empty">ما أضفت أي مطعم بعد.</li>';
+function renderList(el, list, isOut, msgEl){
+  el.innerHTML = "";
+  if (!list.length){
+    el.innerHTML = '<li class="empty">' + (isOut ? "ما فيه مطاعم مستبعدة." : "ما أضفت أي مطعم بعد.") + '</li>';
     return;
   }
-  pipeline.forEach((r, idx) => {
+  list.forEach((r, idx) => {
     const li = document.createElement("li");
     li.className = "entry";
+
     const body = document.createElement("div");
     body.className = "entry-body";
     const nm = document.createElement("div");
     nm.className = "entry-name";
     nm.textContent = r.name;
     body.appendChild(nm);
-    if (r.note){
+
+    const extra = isOut ? r.why : r.note;
+    if (extra){
       const p = document.createElement("p");
       p.className = "entry-note";
-      p.textContent = r.note;
+      if (isOut) p.style.color = "#B42318";
+      p.textContent = extra;
       body.appendChild(p);
     }
+
     const del = document.createElement("button");
     del.className = "del";
     del.type = "button";
@@ -883,37 +945,64 @@ function renderManage(){
     del.textContent = "×";
     del.addEventListener("click", async () => {
       del.disabled = true;
-      const backup = pipeline.slice();
-      pipeline.splice(idx, 1);
+      const backup = list.slice();
+      list.splice(idx, 1);
       try{
         await savePipeline("حذف " + r.name);
-        renderManage(); renderPipeline();
-        say(pMsg, "انحذف " + r.name + ".", "ok");
+        renderAdminLists(); renderPipeline();
+        say(msgEl, "انحذف " + r.name + ".", "ok");
       }catch(e){
-        pipeline = backup;
+        if (isOut) excluded = backup; else pipeline = backup;
         del.disabled = false;
-        say(pMsg, "ما انحذف: " + errText(e), "err");
+        say(msgEl, "ما انحذف: " + errText(e), "err");
       }
     });
+
     li.append(logoEl(r), body, del);
-    manageEl.appendChild(li);
+    el.appendChild(li);
   });
 }
 
-const prevEl = $("pPrev");
-$("pLogo").addEventListener("input", e => {
-  const url = e.target.value.trim();
-  if (!url){ prevEl.style.display = "none"; return; }
-  prevEl.onerror = () => { prevEl.style.display = "none"; };
-  prevEl.onload  = () => { prevEl.style.display = "block"; };
-  prevEl.src = url;
-});
+function renderManage(){ renderAdminLists(); }
+function renderAdminLists(){
+  renderList(manageEl, pipeline, false, pMsg);
+  renderList($("manageOut"), excluded, true, $("oMsg"));
+}
 
+/* معاينة اللوقو */
+function hookPreview(inputId, prevId){
+  const prev = $(prevId);
+  $(inputId).addEventListener("input", e => {
+    const url = e.target.value.trim();
+    if (!url){ prev.style.display = "none"; return; }
+    prev.onerror = () => { prev.style.display = "none"; };
+    prev.onload  = () => { prev.style.display = "block"; };
+    prev.src = url;
+  });
+}
+hookPreview("pLogo", "pPrev");
+hookPreview("oLogo", "oPrev");
+
+/* الاسم موجود في أي من القائمتين؟ */
+function findPlace(name){
+  const n = norm(name);
+  const t = pipeline.find(r => norm(r.name) === n);
+  if (t) return { where:"trying", item:t };
+  const x = excluded.find(r => norm(r.name) === n);
+  if (x) return { where:"excluded", item:x };
+  return null;
+}
+
+/* إضافة إلى "أجربها" */
 $("pAdd").addEventListener("click", async () => {
   const nameEl = $("pName"), noteEl = $("pNote"), urlEl = $("pLogo");
   const name = nameEl.value.trim();
   if (!name){ say(pMsg, "اكتب اسم المطعم.", "err"); nameEl.focus(); return; }
-  if (pipeline.some(r => norm(r.name) === norm(name))){ say(pMsg, name + " موجود بالقائمة.", "err"); return; }
+  const dup = findPlace(name);
+  if (dup){
+    say(pMsg, name + (dup.where === "trying" ? " موجود بالقائمة." : " موجود ضمن الخارجين."), "err");
+    return;
+  }
 
   const b = $("pAdd");
   b.disabled = true;
@@ -923,8 +1012,8 @@ $("pAdd").addEventListener("click", async () => {
   try{
     await savePipeline("إضافة " + name);
     nameEl.value = noteEl.value = urlEl.value = "";
-    prevEl.style.display = "none";
-    renderManage(); renderPipeline();
+    $("pPrev").style.display = "none";
+    renderAdminLists(); renderPipeline();
     say(pMsg, "انضاف " + name + ".", "ok");
   }catch(e){
     pipeline = backup;
@@ -932,6 +1021,40 @@ $("pAdd").addEventListener("click", async () => {
   }finally{
     b.disabled = false;
     b.textContent = "أضف المطعم";
+  }
+});
+
+/* إضافة إلى "خارج التقييم" */
+$("oAdd").addEventListener("click", async () => {
+  const nameEl = $("oName"), whyEl = $("oWhy"), urlEl = $("oLogo");
+  const oMsg = $("oMsg");
+  const name = nameEl.value.trim();
+  const why  = whyEl.value.trim();
+  if (!name){ say(oMsg, "اكتب اسم المطعم.", "err"); nameEl.focus(); return; }
+  if (!why){ say(oMsg, "اكتب السبب — هو أهم شي في هذا القسم.", "err"); whyEl.focus(); return; }
+  const dup = findPlace(name);
+  if (dup){
+    say(oMsg, name + (dup.where === "excluded" ? " موجود ضمن الخارجين." : " موجود في قائمة التجربة — احذفه منها أول."), "err");
+    return;
+  }
+
+  const b = $("oAdd");
+  b.disabled = true;
+  b.textContent = "جاري الحفظ…";
+  const backup = excluded.slice();
+  excluded.push({ name, logo: urlEl.value.trim(), why });
+  try{
+    await savePipeline("استبعاد " + name);
+    nameEl.value = whyEl.value = urlEl.value = "";
+    $("oPrev").style.display = "none";
+    renderAdminLists(); renderPipeline();
+    say(oMsg, "انضاف " + name + " للخارجين.", "ok");
+  }catch(e){
+    excluded = backup;
+    say(oMsg, "ما انحفظ: " + errText(e), "err");
+  }finally{
+    b.disabled = false;
+    b.textContent = "أضف للخارجين";
   }
 });
 
