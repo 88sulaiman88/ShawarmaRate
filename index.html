@@ -96,8 +96,23 @@
   .tile-name{font-weight:600;font-size:15.5px;line-height:1.45}
   .tile-note{color:var(--muted);font-size:12.5px;line-height:1.5;margin-top:-6px}
   .tile-why{color:#B42318;font-size:12.5px;line-height:1.5;margin-top:-6px}
-  .sub-block{margin-top:58px;padding-top:46px;border-top:1px solid #DEE5EF}
-  .tile.is-out .logo{filter:grayscale(1);opacity:.75}
+  .band-out{
+    background:#FBF3F2;
+    border-block:1px solid #F2E2DF;
+    padding:62px 0;
+  }
+  .xmark{
+    display:block;
+    width:30px;height:30px;
+    margin:0 auto 16px;
+    border:1.5px solid #E8C6C1;
+    border-radius:50%;
+    color:#B42318;
+    font-size:17px;
+    line-height:27px;
+    text-align:center;
+  }
+  .band-out h2{color:#8C2A21}
   .stack .empty{grid-column:1 / -1;text-align:center}
   .stack .empty .mini{margin-inline-start:8px;background:#fff;color:var(--blue);border:1px solid var(--line);padding:5px 11px;font-size:13px;border-radius:4px;font-weight:500}
 
@@ -130,6 +145,7 @@
   .criteria p{margin:8px 0 0;color:var(--muted);font-size:13px;line-height:1.7}
 
   /* ٤ — الاقتراح */
+  .band-rating{background:#fff}
   .band-suggest{background:var(--blue);color:#fff;padding:74px 0}
   .band-suggest h2{color:#fff;margin-bottom:26px}
   #suggestBox{max-width:460px;margin:0 auto}
@@ -277,11 +293,14 @@
   <div class="wrap center">
     <h2>أنا قاعد أجرّب</h2>
     <ol class="stack" id="stack"></ol>
+  </div>
+</section>
 
-    <div class="sub-block">
-      <h2>مطاعم اقترحتوها خارج التقييم</h2>
-      <ol class="stack" id="stackOut"></ol>
-    </div>
+<section class="band band-out">
+  <div class="wrap center">
+    <span class="xmark" aria-hidden="true">✕</span>
+    <h2>مطاعم اقترحتوها خارج التقييم</h2>
+    <ol class="stack" id="stackOut"></ol>
   </div>
 </section>
 
