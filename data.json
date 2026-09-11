@@ -182,6 +182,13 @@
       "chicken": 3,
       "garlic": 2,
       "price": 7
+    },
+    {
+      "name": "شا شاورما",
+      "logo": "https://images.deliveryhero.io/image/hungerstation/restaurant/logo_ar/0528d9148aceb4e8bce603d442ab7c09.jpg",
+      "chicken": 5,
+      "garlic": 5,
+      "price": 7
     }
   ],
   "excluded": [
