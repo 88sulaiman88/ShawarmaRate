@@ -126,7 +126,9 @@
     font-weight:500;
     color:var(--muted);
   }
-  .rt th:first-child{text-align:start}
+  .rt th:first-child{text-align:center;width:30px}
+  .rt th:nth-child(2){text-align:start}
+  .cell-n{color:var(--faint);font-size:13px;font-weight:500;width:30px}
   .rt th button{
     background:none;border:0;padding:2px 4px;margin:0;
     font:inherit;color:inherit;cursor:pointer;border-radius:3px;
@@ -142,8 +144,9 @@
   .rt-name{font-weight:600;font-size:15px;line-height:1.4}
   .rt-price{font-size:15px;font-weight:500;white-space:nowrap}
   .rt-price span{font-size:11.5px;color:var(--muted);font-weight:400;margin-inline-start:3px}
+  .scorecell{display:inline-block;direction:ltr;unicode-bidi:isolate;white-space:nowrap}
   .rt-score{font-size:17px;font-weight:600;color:var(--blue)}
-  .rt-of{font-size:12.5px;color:var(--faint);font-weight:400;margin-inline-start:1px}
+  .rt-of{font-size:12.5px;color:var(--faint);font-weight:400}
   .face{display:inline-block;vertical-align:middle}
   .facewrap{position:relative;display:inline-block;line-height:0;cursor:pointer}
   .facewrap::after{
@@ -184,6 +187,12 @@
     .rt td::before{content:attr(data-l);color:var(--muted);font-size:12.5px}
     .rt td.cell-place{padding:0 0 9px;margin-bottom:6px;border-bottom:1px solid #EFF2F7}
     .rt td.cell-place::before{content:none}
+    .rt td.cell-n{
+      position:absolute;top:13px;left:14px;
+      padding:0;display:block;width:auto;
+    }
+    .rt td.cell-n::before{content:none}
+    .rt tr{position:relative}
     .sortsel{
       display:block;width:auto;margin:22px auto 0;
       font-size:14px;padding:9px 12px;border:1px solid var(--line);
@@ -376,14 +385,14 @@
 
 <section class="band band-trying">
   <div class="wrap center">
-    <h2>مطاعم تحت التجربة</h2>
+    <h2>مطاعم تحت التجربة:</h2>
     <ol class="stack" id="stack"></ol>
   </div>
 </section>
 
 <section class="band band-rating">
   <div class="wrap center">
-    <h2>مطاعم جرّبتها</h2>
+    <h2>مطاعم جرّبتها:</h2>
     <div id="ratedBox"></div>
     <select class="sortsel" id="sortSel" aria-label="ترتيب الجدول">
       <option value="score">الأعلى تقييماً</option>
@@ -824,6 +833,11 @@ function renderRated(){
 
   const thead = document.createElement("thead");
   const hr = document.createElement("tr");
+  const thN = document.createElement("th");
+  thN.className = "col-n";
+  thN.textContent = "#";
+  hr.appendChild(thN);
+
   const th0 = document.createElement("th");
   th0.textContent = "المطعم";
   hr.appendChild(th0);
@@ -851,8 +865,13 @@ function renderRated(){
   const list = sortedRated();
   const view = showAll ? list : list.slice(0, PAGE);
 
-  view.forEach(r => {
+  view.forEach((r, i) => {
     const tr = document.createElement("tr");
+
+    const tdN = document.createElement("td");
+    tdN.className = "cell-n";
+    tdN.textContent = i + 1;
+    tr.appendChild(tdN);
 
     const tdP = document.createElement("td");
     tdP.className = "cell-place";
@@ -882,7 +901,8 @@ function renderRated(){
 
     const tdS = document.createElement("td");
     tdS.dataset.l = "التقييم";
-    tdS.innerHTML = '<span class="rt-score">' + fmtScore(scoreOf(r)) + '</span><span class="rt-of">/10</span>';
+    tdS.innerHTML = '<span class="scorecell"><span class="rt-score">' + fmtScore(scoreOf(r)) +
+                    '</span><span class="rt-of">/10</span></span>';
     tr.appendChild(tdS);
 
     tbody.appendChild(tr);
@@ -1483,6 +1503,43 @@ $("rAdd").addEventListener("click", async () => {
   }finally{
     b.disabled = false;
     if (!editing.rated && b.textContent === "جاري الحفظ…") b.textContent = "أضف التقييم";
+  }
+});
+
+/* إضافة أو تعديل في "تحت التجربة" */
+$("pAdd").addEventListener("click", async () => {
+  const name = $("pName").value.trim();
+  if (!name){ say(pMsg, "اكتب اسم المطعم.", "err"); $("pName").focus(); return; }
+
+  const dup = findPlace(name);
+  if (dup && dup.item !== editing.trying){
+    say(pMsg, name + (dup.where === "trying" ? " موجود بالقائمة."
+        : dup.where === "rated" ? " مقيّم من قبل." : " موجود ضمن الخارجين."), "err");
+    return;
+  }
+
+  const b = $("pAdd");
+  const isEdit = !!editing.trying;
+  b.disabled = true;
+  b.textContent = "جاري الحفظ…";
+
+  const backup = JSON.stringify(pipeline);
+  const fields = { name, logo: $("pLogo").value.trim(), note: $("pNote").value.trim() };
+  if (isEdit) Object.assign(editing.trying, fields);
+  else pipeline.push(fields);
+
+  try{
+    await savePipeline((isEdit ? "تعديل " : "إضافة ") + name);
+    resetForm("trying");
+    renderAdminLists(); renderPipeline();
+    say(pMsg, (isEdit ? "انحفظ التعديل على " : "انضاف ") + name + ".", "ok");
+  }catch(e){
+    pipeline = JSON.parse(backup);
+    say(pMsg, "ما انحفظ: " + errText(e), "err");
+    b.textContent = isEdit ? "احفظ التعديل" : "أضف المطعم";
+  }finally{
+    b.disabled = false;
+    if (b.textContent === "جاري الحفظ…") b.textContent = editing.trying ? "احفظ التعديل" : "أضف المطعم";
   }
 });
 
