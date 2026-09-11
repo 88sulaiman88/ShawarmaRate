@@ -116,6 +116,62 @@
   .stack .empty{grid-column:1 / -1;text-align:center}
   .stack .empty .mini{margin-inline-start:8px;background:#fff;color:var(--blue);border:1px solid var(--line);padding:5px 11px;font-size:13px;border-radius:4px;font-weight:500}
 
+
+  /* جدول التقييم */
+  .rt{width:100%;border-collapse:collapse;margin:26px 0 0;text-align:center}
+  .rt th{
+    padding:0 0 10px;
+    border-bottom:1px solid var(--line);
+    font-size:12.5px;
+    font-weight:500;
+    color:var(--muted);
+  }
+  .rt th:first-child{text-align:start}
+  .rt th button{
+    background:none;border:0;padding:2px 4px;margin:0;
+    font:inherit;color:inherit;cursor:pointer;border-radius:3px;
+  }
+  .rt th button:hover{background:none;color:var(--blue)}
+  .rt th button.on{color:var(--blue);font-weight:600}
+  .arw{font-size:10px;opacity:.55;margin-inline-start:2px}
+  .rt th button.on .arw{opacity:1}
+  .rt td{padding:13px 4px;border-bottom:1px solid #EFF2F7;vertical-align:middle}
+  .rt tbody tr:last-child td{border-bottom:0}
+  .rt-place{display:flex;align-items:center;gap:11px;text-align:start}
+  .rt-place .logo{width:38px;height:38px;flex:0 0 38px;font-size:16px}
+  .rt-name{font-weight:600;font-size:15px;line-height:1.4}
+  .rt-price{font-size:15px;font-weight:500;white-space:nowrap}
+  .rt-price span{font-size:11.5px;color:var(--muted);font-weight:400;margin-inline-start:3px}
+  .rt-score{font-size:17px;font-weight:600;color:var(--blue)}
+  .face{display:inline-block;vertical-align:middle}
+  .exc{
+    display:inline-block;
+    font-size:11.5px;font-weight:600;color:var(--blue);
+    border:1px solid #CBD8F5;border-radius:99px;
+    padding:2px 9px;white-space:nowrap;
+  }
+  .more{margin:20px auto 0;display:block}
+  .sortsel{display:none}
+  .criteria{margin-top:52px;padding-top:44px;border-top:1px solid var(--line)}
+
+  @media (max-width:560px){
+    .rt thead{display:none}
+    .rt, .rt tbody, .rt tr, .rt td{display:block;width:100%}
+    .rt tr{
+      border:1px solid var(--line);border-radius:6px;
+      padding:13px 14px;margin-bottom:9px;background:#fff;text-align:start;
+    }
+    .rt td{border:0;padding:5px 0;display:flex;align-items:center;justify-content:space-between;gap:12px}
+    .rt td::before{content:attr(data-l);color:var(--muted);font-size:12.5px}
+    .rt td.cell-place{padding:0 0 9px;margin-bottom:6px;border-bottom:1px solid #EFF2F7}
+    .rt td.cell-place::before{content:none}
+    .sortsel{
+      display:block;width:auto;margin:22px auto 0;
+      font-size:14px;padding:9px 12px;border:1px solid var(--line);
+      border-radius:4px;background:#fff;color:var(--ink);font-family:var(--font);
+    }
+  }
+
   /* ٣ — التقييم */
   .soon{
     margin:0 0 34px;
@@ -236,6 +292,9 @@
   .adm-tools button:hover,.mini:hover{background:#fff;border-color:var(--blue)}
 
   .addbox .field{margin-bottom:10px}
+  .scores{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+  .calcline{margin:2px 0 12px;font-size:13px;color:var(--muted);min-height:20px}
+  .calcline b{color:var(--blue);font-weight:600}
   .filerow{display:flex;align-items:center;gap:11px}
   .filerow input{flex:1;min-width:0}
   .preview{width:42px;height:42px;flex:0 0 42px;border-radius:50%;object-fit:cover;background:#fff;border:1px solid var(--line);display:none}
@@ -296,18 +355,17 @@
   </div>
 </section>
 
-<section class="band band-out">
-  <div class="wrap center">
-    <span class="xmark" aria-hidden="true">✕</span>
-    <h2>مطاعم اقترحتوها خارج التقييم</h2>
-    <ol class="stack" id="stackOut"></ol>
-  </div>
-</section>
-
 <section class="band band-rating">
   <div class="wrap center">
     <h2>التقييم</h2>
-    <p class="soon">قريبًا</p>
+    <div id="ratedBox"></div>
+    <select class="sortsel" id="sortSel" aria-label="ترتيب الجدول">
+      <option value="score">الأعلى تقييماً</option>
+      <option value="chicken">الأفضل دجاجاً</option>
+      <option value="garlic">الأفضل ثوماً</option>
+      <option value="price">الأرخص</option>
+    </select>
+    <button class="mini more" id="moreBtn" type="button" style="display:none">أظهر الكل</button>
 
     <div class="criteria">
       <div class="in">
@@ -331,6 +389,16 @@
     </div>
   </div>
 </section>
+
+<section class="band band-out">
+  <div class="wrap center">
+    <span class="xmark" aria-hidden="true">✕</span>
+    <h2>مطاعم اقترحتوها خارج التقييم</h2>
+    <ol class="stack" id="stackOut"></ol>
+  </div>
+</section>
+
+
 
 <section class="band band-suggest">
   <div class="wrap center">
@@ -415,6 +483,41 @@
           </div>
           <button class="add" id="pAdd" type="button">أضف المطعم</button>
           <p class="msg" id="pMsg" role="status" aria-live="polite"></p>
+        </div>
+      </div>
+
+      <div class="panel addbox">
+        <h2 style="margin-bottom:14px">التقييمات</h2>
+        <ul class="feed" id="manageRated"></ul>
+        <div style="margin-top:16px;padding-top:14px;border-top:1px solid var(--line)">
+          <div class="field">
+            <label for="rName">اسم المطعم</label>
+            <input id="rName" type="text" maxlength="80" placeholder="مثال: شاورما الأصيل">
+          </div>
+          <div class="scores">
+            <div class="field">
+              <label for="rChicken">الدجاج <span class="hint">٠–١٠</span></label>
+              <input id="rChicken" type="number" min="0" max="10" step="1" inputmode="numeric">
+            </div>
+            <div class="field">
+              <label for="rGarlic">الثوم <span class="hint">٠–١٠</span></label>
+              <input id="rGarlic" type="number" min="0" max="10" step="1" inputmode="numeric">
+            </div>
+            <div class="field">
+              <label for="rPrice">السعر <span class="hint">ريال</span></label>
+              <input id="rPrice" type="number" min="1" max="99" step="0.5" inputmode="decimal">
+            </div>
+          </div>
+          <p class="calcline" id="rCalc"></p>
+          <div class="field">
+            <label for="rLogo">رابط اللوقو <span class="hint">— اختياري</span></label>
+            <div class="filerow">
+              <input id="rLogo" type="url" dir="ltr" placeholder="https://example.com/logo.png">
+              <img class="preview" id="rPrev" alt="">
+            </div>
+          </div>
+          <button class="add" id="rAdd" type="button">أضف التقييم</button>
+          <p class="msg" id="rMsg" role="status" aria-live="polite"></p>
         </div>
       </div>
 
@@ -533,6 +636,7 @@ const keep = {
 
 /* ---------- قائمة المطاعم ---------- */
 let pipeline = [];   /* اللي أجربها */
+let rated    = [];   /* المقيّمة */
 let excluded = [];   /* اللي خارج التقييم */
 let dataSha  = null;
 
@@ -593,7 +697,186 @@ function renderInto(el, list, isOut, emptyText){
 function renderPipeline(){
   renderInto($("stack"), pipeline, false, "القائمة فاضية حالياً.");
   renderInto($("stackOut"), excluded, true, "ما فيه مطاعم مستبعدة.");
+  renderRated();
 }
+
+
+/* ==========================================================
+   معادلة التقييم
+   الدجاج ٤٢٫٥٪ · الثوم ٤٢٫٥٪ · السعر ١٥٪
+   درجة السعر: ٦ ريال = ١٠، وكل ريال زيادة يخصم درجتين (مرساة ثابتة
+   عشان إضافة مطعم جديد ما تغيّر درجات اللي قبله).
+   ========================================================== */
+const W = { chicken: 0.425, garlic: 0.425, price: 0.15 };
+const PRICE_BASE = 6, PRICE_STEP = 2;
+
+const priceScore = riyal => Math.max(0, Math.min(10, 10 - (Number(riyal) - PRICE_BASE) * PRICE_STEP));
+
+function scoreOf(r){
+  return W.chicken * Number(r.chicken) +
+         W.garlic  * Number(r.garlic)  +
+         W.price   * priceScore(r.price);
+}
+const fmtScore = n => n.toFixed(1);
+
+/* الوجوه — ٠–٣ سيء · ٤–٦ عادي · ٧–٩ ممتاز · ١٠ استثنائي */
+function faceSVG(v){
+  const n = Number(v);
+  const eyes = n >= 7
+    ? '<path d="M11,14.2 C8.6,11.4 9.8,9.8 11,11.4 C12.2,9.8 13.4,11.4 11,14.2 Z" fill="#C2352B"/>' +
+      '<path d="M21,14.2 C18.6,11.4 19.8,9.8 21,11.4 C22.2,9.8 23.4,11.4 21,14.2 Z" fill="#C2352B"/>'
+    : '<circle cx="11.5" cy="13" r="1.7" fill="currentColor"/><circle cx="20.5" cy="13" r="1.7" fill="currentColor"/>';
+
+  let mouth;
+  if (n >= 7)      mouth = '<path d="M10.5,19 Q16,24.5 21.5,19" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>';
+  else if (n >= 4) mouth = '<path d="M11,20.5 H21" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>';
+  else             mouth = '<path d="M10.5,22.5 Q16,17 21.5,22.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>';
+
+  return '<svg class="face" width="32" height="32" viewBox="0 0 32 32" role="img" aria-label="' + label(n) + '">' +
+         '<circle cx="16" cy="16" r="14.2" fill="none" stroke="currentColor" stroke-width="1.8"/>' +
+         eyes + mouth + '</svg>';
+}
+
+function label(n){
+  n = Number(n);
+  if (n === 10) return "استثنائي";
+  if (n >= 7)   return "ممتاز";
+  if (n >= 4)   return "عادي";
+  return "سيء";
+}
+
+function markFor(v){
+  return Number(v) === 10
+    ? '<span class="exc">استثنائي</span>'
+    : faceSVG(v);
+}
+
+/* ---------- الجدول ---------- */
+let sortKey = "score", sortDir = -1, showAll = false;
+const DEFAULT_DIR = { score:-1, chicken:-1, garlic:-1, price:1 };
+const PAGE = 5;
+
+function sortedRated(){
+  const list = rated.slice();
+  list.sort((a, b) => {
+    const val = r => sortKey === "score" ? scoreOf(r) : Number(r[sortKey]);
+    let d = (val(a) - val(b)) * sortDir;
+    if (d) return d;
+    /* التعادل: الثوم، ثم الدجاج، ثم الأرخص */
+    d = Number(b.garlic) - Number(a.garlic);       if (d) return d;
+    d = Number(b.chicken) - Number(a.chicken);     if (d) return d;
+    return Number(a.price) - Number(b.price);
+  });
+  return list;
+}
+
+function renderRated(){
+  const box = $("ratedBox");
+  box.innerHTML = "";
+  $("moreBtn").style.display = "none";
+  $("sortSel").style.display = "";
+
+  if (!rated.length){
+    box.innerHTML = '<p class="empty" style="margin-top:22px">ما فيه تقييمات بعد.</p>';
+    $("sortSel").style.display = "none";
+    return;
+  }
+
+  const cols = [
+    { k:"chicken", t:"الدجاج" },
+    { k:"garlic",  t:"الثوم" },
+    { k:"price",   t:"السعر" },
+    { k:"score",   t:"التقييم" }
+  ];
+
+  const table = document.createElement("table");
+  table.className = "rt";
+
+  const thead = document.createElement("thead");
+  const hr = document.createElement("tr");
+  const th0 = document.createElement("th");
+  th0.textContent = "المطعم";
+  hr.appendChild(th0);
+
+  cols.forEach(c => {
+    const th = document.createElement("th");
+    const b = document.createElement("button");
+    b.type = "button";
+    b.className = sortKey === c.k ? "on" : "";
+    b.innerHTML = c.t + '<span class="arw">' +
+      (sortKey === c.k ? (sortDir === -1 ? "▼" : "▲") : "↕") + '</span>';
+    b.addEventListener("click", () => {
+      if (sortKey === c.k) sortDir = -sortDir;
+      else { sortKey = c.k; sortDir = DEFAULT_DIR[c.k]; }
+      $("sortSel").value = sortKey;
+      renderRated();
+    });
+    th.appendChild(b);
+    hr.appendChild(th);
+  });
+  thead.appendChild(hr);
+  table.appendChild(thead);
+
+  const tbody = document.createElement("tbody");
+  const list = sortedRated();
+  const view = showAll ? list : list.slice(0, PAGE);
+
+  view.forEach(r => {
+    const tr = document.createElement("tr");
+
+    const tdP = document.createElement("td");
+    tdP.className = "cell-place";
+    const wrapEl = document.createElement("div");
+    wrapEl.className = "rt-place";
+    const nm = document.createElement("div");
+    nm.className = "rt-name";
+    nm.textContent = r.name;
+    wrapEl.append(logoEl(r), nm);
+    tdP.appendChild(wrapEl);
+    tr.appendChild(tdP);
+
+    const tdC = document.createElement("td");
+    tdC.dataset.l = "الدجاج";
+    tdC.innerHTML = markFor(r.chicken);
+    tr.appendChild(tdC);
+
+    const tdG = document.createElement("td");
+    tdG.dataset.l = "الثوم";
+    tdG.innerHTML = markFor(r.garlic);
+    tr.appendChild(tdG);
+
+    const tdPr = document.createElement("td");
+    tdPr.dataset.l = "السعر";
+    tdPr.innerHTML = '<span class="rt-price">' + r.price + '<span>ر.س</span></span>';
+    tr.appendChild(tdPr);
+
+    const tdS = document.createElement("td");
+    tdS.dataset.l = "التقييم";
+    tdS.innerHTML = '<span class="rt-score">' + fmtScore(scoreOf(r)) + '</span>';
+    tr.appendChild(tdS);
+
+    tbody.appendChild(tr);
+  });
+
+  table.appendChild(tbody);
+  box.appendChild(table);
+
+  /* الزر يظهر فقط لما تستاهل القائمة الطي */
+  if (list.length > PAGE + 2){
+    const btn = $("moreBtn");
+    btn.style.display = "";
+    btn.textContent = showAll ? "أظهر أقل" : "أظهر الكل (" + list.length + ")";
+  } else if (list.length > PAGE){
+    showAll = true;
+  }
+}
+
+$("moreBtn").addEventListener("click", () => { showAll = !showAll; renderRated(); });
+$("sortSel").addEventListener("change", e => {
+  sortKey = e.target.value;
+  sortDir = DEFAULT_DIR[sortKey];
+  renderRated();
+});
 
 /* قراءة عامة بدون توكن — مع إعادة محاولة ومصدر بديل ونسخة محفوظة */
 const RAW_URL = () => "https://raw.githubusercontent.com/" + GH.user + "/" + GH.repo +
@@ -607,9 +890,14 @@ async function fetchList(url, headers){
   const json = await res.json();
   /* الشكل القديم: مصفوفة. الجديد: { trying, excluded } */
   const data = Array.isArray(json)
-    ? { trying: json, excluded: [] }
-    : { trying: json.trying || json.restaurants || [], excluded: json.excluded || [] };
-  if (!Array.isArray(data.trying) || !Array.isArray(data.excluded)) throw new Error("صيغة غير متوقعة");
+    ? { trying: json, rated: [], excluded: [] }
+    : {
+        trying:   json.trying || json.restaurants || [],
+        rated:    json.rated || [],
+        excluded: json.excluded || []
+      };
+  if (!Array.isArray(data.trying) || !Array.isArray(data.rated) || !Array.isArray(data.excluded))
+    throw new Error("صيغة غير متوقعة");
   return data;
 }
 
@@ -640,6 +928,7 @@ async function loadPipeline(){
       try{
         const data = await get();
         pipeline = data.trying;
+        rated    = data.rated;
         excluded = data.excluded;
         keep.set("list-cache", JSON.stringify(data));
         renderPipeline();
@@ -655,12 +944,13 @@ async function loadPipeline(){
     try{
       const data = JSON.parse(cached);
       pipeline = Array.isArray(data) ? data : (data.trying || []);
+      rated    = Array.isArray(data) ? [] : (data.rated || []);
       excluded = Array.isArray(data) ? [] : (data.excluded || []);
       renderPipeline();
       return;
     }catch(e){}
   }
-  pipeline = []; excluded = [];
+  pipeline = []; rated = []; excluded = [];
   showListError();
 }
 
@@ -693,7 +983,7 @@ async function savePipeline(message){
   const sha = await fetchSha();
   const body = {
     message: message || "تحديث قائمة المطاعم",
-    content: b64(JSON.stringify({ trying: pipeline, excluded }, null, 2)),
+    content: b64(JSON.stringify({ trying: pipeline, rated, excluded }, null, 2)),
     branch: GH.branch
   };
   if (sha) body.sha = sha;
@@ -725,9 +1015,11 @@ async function submit(){
   if (!who){ say(msgEl, "ناقص اسمك.", "err"); $("who").focus(); return; }
   const found = findPlace(place);
   if (found){
-    say(msgEl, found.where === "trying"
-      ? place + " موجود بالفعل ضمن قائمة التجربة."
-      : place + " خارج التقييم" + (found.item.why ? " — " + found.item.why : "") + ".", "err");
+    let m;
+    if (found.where === "trying")      m = place + " موجود بالفعل ضمن قائمة التجربة.";
+    else if (found.where === "rated")  m = place + " مقيّم فوق — شوف درجته في الجدول.";
+    else                               m = place + " خارج التقييم" + (found.item.why ? " — " + found.item.why : "") + ".";
+    say(msgEl, m, "err");
     return;
   }
   sendBtn.disabled = true;
@@ -986,7 +1278,101 @@ function renderManage(){ renderAdminLists(); }
 function renderAdminLists(){
   renderList(manageEl, pipeline, false, pMsg);
   renderList($("manageOut"), excluded, true, $("oMsg"));
+  renderRatedAdmin();
 }
+
+function renderRatedAdmin(){
+  const el = $("manageRated");
+  el.innerHTML = "";
+  if (!rated.length){
+    el.innerHTML = '<li class="empty">ما فيه تقييمات بعد.</li>';
+    return;
+  }
+  sortedRated().forEach(r => {
+    const li = document.createElement("li");
+    li.className = "entry";
+
+    const body = document.createElement("div");
+    body.className = "entry-body";
+    const nm = document.createElement("div");
+    nm.className = "entry-name";
+    nm.textContent = r.name;
+    const det = document.createElement("p");
+    det.className = "entry-note";
+    det.textContent = "دجاج " + r.chicken + " · ثوم " + r.garlic + " · " + r.price + " ر.س → " + fmtScore(scoreOf(r));
+    body.append(nm, det);
+
+    const del = document.createElement("button");
+    del.className = "del";
+    del.type = "button";
+    del.title = "حذف";
+    del.setAttribute("aria-label", "حذف تقييم " + r.name);
+    del.textContent = "×";
+    del.addEventListener("click", async () => {
+      del.disabled = true;
+      const backup = rated.slice();
+      rated = rated.filter(x => x !== r);
+      try{
+        await savePipeline("حذف تقييم " + r.name);
+        renderAdminLists(); renderPipeline();
+        say($("rMsg"), "انحذف " + r.name + ".", "ok");
+      }catch(e){
+        rated = backup;
+        del.disabled = false;
+        say($("rMsg"), "ما انحذف: " + errText(e), "err");
+      }
+    });
+
+    li.append(logoEl(r), body, del);
+    el.appendChild(li);
+  });
+}
+
+/* معاينة حيّة للدرجة قبل الحفظ */
+function previewScore(){
+  const c = $("rChicken").value, g = $("rGarlic").value, pr = $("rPrice").value;
+  if (c === "" || g === "" || pr === ""){ $("rCalc").textContent = ""; return; }
+  const s = scoreOf({ chicken:c, garlic:g, price:pr });
+  $("rCalc").innerHTML = "الدرجة: <b>" + fmtScore(s) + "</b> · الدجاج " + label(c) +
+                         " · الثوم " + label(g) + " · درجة السعر " + priceScore(pr).toFixed(1);
+}
+["rChicken","rGarlic","rPrice"].forEach(id => $(id).addEventListener("input", previewScore));
+
+$("rAdd").addEventListener("click", async () => {
+  const rMsg = $("rMsg");
+  const name = $("rName").value.trim();
+  const c = $("rChicken").value, g = $("rGarlic").value, pr = $("rPrice").value;
+
+  if (!name){ say(rMsg, "اكتب اسم المطعم.", "err"); $("rName").focus(); return; }
+  if (c === "" || g === "" || pr === ""){ say(rMsg, "عبّي الدجاج والثوم والسعر.", "err"); return; }
+
+  const cn = Number(c), gn = Number(g), pn = Number(pr);
+  if (![cn, gn].every(v => v >= 0 && v <= 10)){ say(rMsg, "الدرجات من ٠ إلى ١٠.", "err"); return; }
+  if (!(pn > 0)){ say(rMsg, "السعر لازم يكون أكبر من صفر.", "err"); return; }
+
+  const dup = findPlace(name);
+  if (dup && dup.where === "rated"){ say(rMsg, name + " مقيّم من قبل — احذفه أول.", "err"); return; }
+
+  const b = $("rAdd");
+  b.disabled = true;
+  b.textContent = "جاري الحفظ…";
+  const backup = rated.slice();
+  rated.push({ name, logo: $("rLogo").value.trim(), chicken: cn, garlic: gn, price: pn });
+  try{
+    await savePipeline("تقييم " + name);
+    $("rName").value = $("rChicken").value = $("rGarlic").value = $("rPrice").value = $("rLogo").value = "";
+    $("rPrev").style.display = "none";
+    $("rCalc").textContent = "";
+    renderAdminLists(); renderPipeline();
+    say(rMsg, "انضاف تقييم " + name + ".", "ok");
+  }catch(e){
+    rated = backup;
+    say(rMsg, "ما انحفظ: " + errText(e), "err");
+  }finally{
+    b.disabled = false;
+    b.textContent = "أضف التقييم";
+  }
+});
 
 /* معاينة اللوقو */
 function hookPreview(inputId, prevId){
@@ -1001,12 +1387,15 @@ function hookPreview(inputId, prevId){
 }
 hookPreview("pLogo", "pPrev");
 hookPreview("oLogo", "oPrev");
+hookPreview("rLogo", "rPrev");
 
 /* الاسم موجود في أي من القائمتين؟ */
 function findPlace(name){
   const n = norm(name);
   const t = pipeline.find(r => norm(r.name) === n);
   if (t) return { where:"trying", item:t };
+  const v = rated.find(r => norm(r.name) === n);
+  if (v) return { where:"rated", item:v };
   const x = excluded.find(r => norm(r.name) === n);
   if (x) return { where:"excluded", item:x };
   return null;
