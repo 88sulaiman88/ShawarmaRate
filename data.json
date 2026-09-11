@@ -133,6 +133,13 @@
       "chicken": 5,
       "garlic": 5,
       "price": 7
+    },
+    {
+      "name": "ذوق المذاق",
+      "logo": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRzq72iof0FcRRlePEjBRIAliF1J85QOZyaM4bdpDN-Zg&s",
+      "chicken": 10,
+      "garlic": 10,
+      "price": 7
     }
   ],
   "excluded": [
