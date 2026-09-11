@@ -189,6 +189,13 @@
       "chicken": 5,
       "garlic": 5,
       "price": 7
+    },
+    {
+      "name": "ماما نورة",
+      "logo": "https://images.deliveryhero.io/image/hungerstation/restaurant/logo_ar/eb46e420c65e6e4e1fc3c6ff6e93be9f.jpg",
+      "chicken": 9,
+      "garlic": 9,
+      "price": 2
     }
   ],
   "excluded": [
