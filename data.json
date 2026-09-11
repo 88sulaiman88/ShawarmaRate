@@ -217,6 +217,13 @@
       "chicken": 2,
       "garlic": 2,
       "price": 6
+    },
+    {
+      "name": "ركن السنافي",
+      "logo": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTNEPqrRZXKLCKXdMlCRJJU4JvzMc9sRLBpGfAowhEQww&s=10",
+      "chicken": 5,
+      "garlic": 6,
+      "price": 6
     }
   ],
   "excluded": [
