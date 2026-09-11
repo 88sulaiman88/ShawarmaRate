@@ -175,6 +175,13 @@
       "chicken": 7,
       "garlic": 5,
       "price": 8
+    },
+    {
+      "name": "أنوار اللؤلؤة",
+      "logo": "https://images.deliveryhero.io/image/hungerstation/restaurant/logo_ar/4daa69edcbcc5bcebe763dadb45d0e62.jpg",
+      "chicken": 3,
+      "garlic": 2,
+      "price": 7
     }
   ],
   "excluded": [
