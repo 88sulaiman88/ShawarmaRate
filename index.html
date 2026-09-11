@@ -172,7 +172,6 @@
     70%{box-shadow:0 0 0 9px rgba(27,68,200,0)}
     100%{box-shadow:0 0 0 0 rgba(27,68,200,0)}
   }
-  .more{margin:20px auto 0;display:block}
   .sortsel{display:none}
   .criteria{margin-top:52px;padding-top:44px;border-top:1px solid var(--line)}
 
@@ -400,7 +399,6 @@
       <option value="garlic">الأفضل ثوماً</option>
       <option value="price">الأرخص</option>
     </select>
-    <button class="mini more" id="moreBtn" type="button" style="display:none">أظهر الكل</button>
 
     <div class="criteria">
       <div class="in">
@@ -791,9 +789,8 @@ document.addEventListener("click", e => {
 });
 
 /* ---------- الجدول ---------- */
-let sortKey = "score", sortDir = -1, showAll = false;
+let sortKey = "score", sortDir = -1;
 const DEFAULT_DIR = { score:-1, chicken:-1, garlic:-1, price:1 };
-const PAGE = 5;
 
 function sortedRated(){
   const list = rated.slice();
@@ -812,7 +809,6 @@ function sortedRated(){
 function renderRated(){
   const box = $("ratedBox");
   box.innerHTML = "";
-  $("moreBtn").style.display = "none";
   $("sortSel").style.display = "";
 
   if (!rated.length){
@@ -863,7 +859,7 @@ function renderRated(){
 
   const tbody = document.createElement("tbody");
   const list = sortedRated();
-  const view = showAll ? list : list.slice(0, PAGE);
+  const view = list;
 
   view.forEach((r, i) => {
     const tr = document.createElement("tr");
@@ -911,17 +907,8 @@ function renderRated(){
   table.appendChild(tbody);
   box.appendChild(table);
 
-  /* الزر يظهر فقط لما تستاهل القائمة الطي */
-  if (list.length > PAGE + 2){
-    const btn = $("moreBtn");
-    btn.style.display = "";
-    btn.textContent = showAll ? "أظهر أقل" : "أظهر الكل (" + list.length + ")";
-  } else if (list.length > PAGE){
-    showAll = true;
-  }
 }
 
-$("moreBtn").addEventListener("click", () => { showAll = !showAll; renderRated(); });
 $("sortSel").addEventListener("change", e => {
   sortKey = e.target.value;
   sortDir = DEFAULT_DIR[sortKey];
@@ -1272,6 +1259,34 @@ $("linkGen").addEventListener("click", async () => {
 });
 
 /* ---------- إدارة المطاعم ---------- */
+/* معاينة اللوقو من الرابط */
+function hookPreview(inputId, prevId){
+  const prev = $(prevId);
+  $(inputId).addEventListener("input", e => {
+    const url = e.target.value.trim();
+    if (!url){ prev.style.display = "none"; return; }
+    prev.onerror = () => { prev.style.display = "none"; };
+    prev.onload  = () => { prev.style.display = "block"; };
+    prev.src = url;
+  });
+}
+hookPreview("pLogo", "pPrev");
+hookPreview("oLogo", "oPrev");
+hookPreview("rLogo", "rPrev");
+
+/* الاسم موجود في أي من القوائم الثلاث؟ */
+function findPlace(name){
+  const n = norm(name);
+  const t = pipeline.find(r => norm(r.name) === n);
+  if (t) return { where:"trying", item:t };
+  const v = rated.find(r => norm(r.name) === n);
+  if (v) return { where:"rated", item:v };
+  const x = excluded.find(r => norm(r.name) === n);
+  if (x) return { where:"excluded", item:x };
+  return null;
+}
+
+
 let editing = { trying:null, rated:null, excluded:null };
 
 function actionBtns(onEdit, onDel, name){
