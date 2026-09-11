@@ -126,6 +126,15 @@
       "note": ""
     }
   ],
+  "rated": [
+    {
+      "name": "شاورما زينة",
+      "logo": "https://images.deliveryhero.io/image/hungerstation/restaurant/logo_ar/893bbd701fa1c005949600a9591b1a0d.png",
+      "chicken": 5,
+      "garlic": 5,
+      "price": 7
+    }
+  ],
   "excluded": [
     {
       "name": "شاورما مرحال",
