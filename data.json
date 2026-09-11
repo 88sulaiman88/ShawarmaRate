@@ -147,6 +147,13 @@
       "chicken": 5,
       "garlic": 7,
       "price": 6
+    },
+    {
+      "name": "نجم الشاورما",
+      "logo": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSRahMCbMjvJZWL3Kn2sQj6OE1_24v5AL-vq9oz2Qn35g&s=10",
+      "chicken": 9,
+      "garlic": 9,
+      "price": 7
     }
   ],
   "excluded": [
