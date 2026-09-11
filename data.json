@@ -140,6 +140,13 @@
       "chicken": 10,
       "garlic": 10,
       "price": 7
+    },
+    {
+      "name": "رايقة",
+      "logo": "https://images.deliveryhero.io/image/hungerstation/restaurant/logo_ar/4cea852ea0d4aad1244c4c89582807e1.jpeg",
+      "chicken": 5,
+      "garlic": 7,
+      "price": 6
     }
   ],
   "excluded": [
