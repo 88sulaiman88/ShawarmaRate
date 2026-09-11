@@ -203,6 +203,13 @@
       "chicken": 5,
       "garlic": 5,
       "price": 6
+    },
+    {
+      "name": "الصاج الذهبي",
+      "logo": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSfoemtfKKggBFy1QFhBBAtBcACQh-qoYWEYZ5JXTBj3aOecadwDDBJWII&s=10",
+      "chicken": 8,
+      "garlic": 4,
+      "price": 8
     }
   ],
   "excluded": [
