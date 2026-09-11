@@ -224,6 +224,13 @@
       "chicken": 5,
       "garlic": 6,
       "price": 6
+    },
+    {
+      "name": "شاورما فهد",
+      "logo": "https://lh3.googleusercontent.com/gps-cs-s/AHRPTWnNuNkaZQ6uSM31YIY_Gq506zxWVX1jTfTRSjasJCV48e2nRqFvucsW4K_75KOJtiJ15MQibbG1ATnutHbNOxVyz4eHZVrAOrwId0KS_Txh0-WGqoYvO8VFVAQ4JdxnfuD-grMGbaRky6g=s680-w680-h510-rw",
+      "chicken": 0,
+      "garlic": 1,
+      "price": 7
     }
   ],
   "excluded": [
