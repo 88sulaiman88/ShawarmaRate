@@ -196,6 +196,13 @@
       "chicken": 9,
       "garlic": 9,
       "price": 2
+    },
+    {
+      "name": "شاورمر",
+      "logo": "https://images.deliveryhero.io/image/hungerstation/restaurant/logo_ar/db1a1ac25142e1f9a8f2977e50dd95fd.jpg",
+      "chicken": 3,
+      "garlic": 5,
+      "price": 7
     }
   ],
   "excluded": [
