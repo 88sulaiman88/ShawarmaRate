@@ -138,17 +138,36 @@
   .rt td{padding:13px 4px;border-bottom:1px solid #EFF2F7;vertical-align:middle}
   .rt tbody tr:last-child td{border-bottom:0}
   .rt-place{display:flex;align-items:center;gap:11px;text-align:start}
-  .rt-place .logo{width:38px;height:38px;flex:0 0 38px;font-size:16px}
+  .rt-place .logo{width:50px;height:50px;flex:0 0 50px;font-size:20px}
   .rt-name{font-weight:600;font-size:15px;line-height:1.4}
   .rt-price{font-size:15px;font-weight:500;white-space:nowrap}
   .rt-price span{font-size:11.5px;color:var(--muted);font-weight:400;margin-inline-start:3px}
   .rt-score{font-size:17px;font-weight:600;color:var(--blue)}
+  .rt-of{font-size:12.5px;color:var(--faint);font-weight:400;margin-inline-start:1px}
   .face{display:inline-block;vertical-align:middle}
+  .facewrap{position:relative;display:inline-block;line-height:0;cursor:pointer}
+  .facewrap::after{
+    content:attr(data-lbl);
+    position:absolute;bottom:calc(100% + 7px);left:50%;
+    transform:translateX(-50%);
+    background:var(--ink);color:#fff;
+    font-size:11.5px;line-height:1.6;font-weight:500;
+    padding:2px 10px;border-radius:4px;
+    white-space:nowrap;opacity:0;pointer-events:none;
+    transition:opacity .15s;
+  }
+  .facewrap:hover::after,.facewrap:focus-visible::after,.facewrap.show::after{opacity:1}
   .exc{
     display:inline-block;
-    font-size:11.5px;font-weight:600;color:var(--blue);
-    border:1px solid #CBD8F5;border-radius:99px;
-    padding:2px 9px;white-space:nowrap;
+    font-size:11.5px;font-weight:600;color:#fff;
+    background:var(--blue);border:0;border-radius:99px;
+    padding:3px 11px;white-space:nowrap;
+    animation:pulse 2.6s ease-out infinite;
+  }
+  @keyframes pulse{
+    0%{box-shadow:0 0 0 0 rgba(27,68,200,.42)}
+    70%{box-shadow:0 0 0 9px rgba(27,68,200,0)}
+    100%{box-shadow:0 0 0 0 rgba(27,68,200,0)}
   }
   .more{margin:20px auto 0;display:block}
   .sortsel{display:none}
@@ -293,6 +312,7 @@
 
   .addbox .field{margin-bottom:10px}
   .scores{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+  .formacts{display:flex;align-items:center;gap:9px;flex-wrap:wrap}
   .calcline{margin:2px 0 12px;font-size:13px;color:var(--muted);min-height:20px}
   .calcline b{color:var(--blue);font-weight:600}
   .filerow{display:flex;align-items:center;gap:11px}
@@ -305,6 +325,12 @@
   .entry-body{min-width:0;flex:1}
   .entry-name{font-weight:600;font-size:15.5px}
   .entry-note{margin:2px 0 0;color:var(--muted);font-size:14px;line-height:1.6}
+  .acts{display:flex;align-items:center;gap:2px;flex:0 0 auto}
+  .edit{
+    background:none;border:0;padding:3px 7px;
+    color:var(--muted);font-size:12.5px;font-weight:500;cursor:pointer;
+  }
+  .edit:hover{background:none;color:var(--blue)}
   .del{background:none;color:var(--faint);border:0;padding:0 6px;font-size:18px;line-height:1.4;cursor:pointer}
   .del:hover{background:none;color:#B42318}
   .empty{color:var(--muted);font-size:14.5px;margin:0}
@@ -350,14 +376,14 @@
 
 <section class="band band-trying">
   <div class="wrap center">
-    <h2>أنا قاعد أجرّب</h2>
+    <h2>مطاعم تحت التجربة</h2>
     <ol class="stack" id="stack"></ol>
   </div>
 </section>
 
 <section class="band band-rating">
   <div class="wrap center">
-    <h2>التقييم</h2>
+    <h2>مطاعم جرّبتها</h2>
     <div id="ratedBox"></div>
     <select class="sortsel" id="sortSel" aria-label="ترتيب الجدول">
       <option value="score">الأعلى تقييماً</option>
@@ -481,7 +507,7 @@
               <img class="preview" id="pPrev" alt="">
             </div>
           </div>
-          <button class="add" id="pAdd" type="button">أضف المطعم</button>
+          <div class="formacts"><button class="add" id="pAdd" type="button">أضف المطعم</button><button class="mini cancel" id="pAddCancel" type="button" style="display:none">إلغاء التعديل</button></div>
           <p class="msg" id="pMsg" role="status" aria-live="polite"></p>
         </div>
       </div>
@@ -516,7 +542,7 @@
               <img class="preview" id="rPrev" alt="">
             </div>
           </div>
-          <button class="add" id="rAdd" type="button">أضف التقييم</button>
+          <div class="formacts"><button class="add" id="rAdd" type="button">أضف التقييم</button><button class="mini cancel" id="rAddCancel" type="button" style="display:none">إلغاء التعديل</button></div>
           <p class="msg" id="rMsg" role="status" aria-live="polite"></p>
         </div>
       </div>
@@ -540,7 +566,7 @@
               <img class="preview" id="oPrev" alt="">
             </div>
           </div>
-          <button class="add" id="oAdd" type="button">أضف للخارجين</button>
+          <div class="formacts"><button class="add" id="oAdd" type="button">أضف للخارجين</button><button class="mini cancel" id="oAddCancel" type="button" style="display:none">إلغاء التعديل</button></div>
           <p class="msg" id="oMsg" role="status" aria-live="polite"></p>
         </div>
       </div>
@@ -722,19 +748,16 @@ const fmtScore = n => n.toFixed(1);
 /* الوجوه — ٠–٣ سيء · ٤–٦ عادي · ٧–٩ ممتاز · ١٠ استثنائي */
 function faceSVG(v){
   const n = Number(v);
-  const eyes = n >= 7
-    ? '<path d="M11,14.2 C8.6,11.4 9.8,9.8 11,11.4 C12.2,9.8 13.4,11.4 11,14.2 Z" fill="#C2352B"/>' +
-      '<path d="M21,14.2 C18.6,11.4 19.8,9.8 21,11.4 C22.2,9.8 23.4,11.4 21,14.2 Z" fill="#C2352B"/>'
-    : '<circle cx="11.5" cy="13" r="1.7" fill="currentColor"/><circle cx="20.5" cy="13" r="1.7" fill="currentColor"/>';
-
   let mouth;
   if (n >= 7)      mouth = '<path d="M10.5,19 Q16,24.5 21.5,19" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>';
   else if (n >= 4) mouth = '<path d="M11,20.5 H21" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>';
   else             mouth = '<path d="M10.5,22.5 Q16,17 21.5,22.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>';
 
-  return '<svg class="face" width="32" height="32" viewBox="0 0 32 32" role="img" aria-label="' + label(n) + '">' +
+  return '<svg class="face" width="34" height="34" viewBox="0 0 32 32" aria-hidden="true">' +
          '<circle cx="16" cy="16" r="14.2" fill="none" stroke="currentColor" stroke-width="1.8"/>' +
-         eyes + mouth + '</svg>';
+         '<circle cx="11.5" cy="13" r="1.7" fill="currentColor"/>' +
+         '<circle cx="20.5" cy="13" r="1.7" fill="currentColor"/>' +
+         mouth + '</svg>';
 }
 
 function label(n){
@@ -746,10 +769,17 @@ function label(n){
 }
 
 function markFor(v){
-  return Number(v) === 10
-    ? '<span class="exc">استثنائي</span>'
-    : faceSVG(v);
+  if (Number(v) === 10) return '<span class="exc">استثنائي</span>';
+  return '<span class="facewrap" tabindex="0" role="img" aria-label="' + label(v) +
+         '" data-lbl="' + label(v) + '">' + faceSVG(v) + '</span>';
 }
+
+/* الضغط على الوجه يظهر التصنيف (للجوال) */
+document.addEventListener("click", e => {
+  const w = e.target.closest(".facewrap");
+  document.querySelectorAll(".facewrap.show").forEach(x => { if (x !== w) x.classList.remove("show"); });
+  if (w) w.classList.toggle("show");
+});
 
 /* ---------- الجدول ---------- */
 let sortKey = "score", sortDir = -1, showAll = false;
@@ -852,7 +882,7 @@ function renderRated(){
 
     const tdS = document.createElement("td");
     tdS.dataset.l = "التقييم";
-    tdS.innerHTML = '<span class="rt-score">' + fmtScore(scoreOf(r)) + '</span>';
+    tdS.innerHTML = '<span class="rt-score">' + fmtScore(scoreOf(r)) + '</span><span class="rt-of">/10</span>';
     tr.appendChild(tdS);
 
     tbody.appendChild(tr);
@@ -1222,13 +1252,38 @@ $("linkGen").addEventListener("click", async () => {
 });
 
 /* ---------- إدارة المطاعم ---------- */
+let editing = { trying:null, rated:null, excluded:null };
+
+function actionBtns(onEdit, onDel, name){
+  const acts = document.createElement("div");
+  acts.className = "acts";
+
+  const ed = document.createElement("button");
+  ed.className = "edit";
+  ed.type = "button";
+  ed.textContent = "تعديل";
+  ed.setAttribute("aria-label", "تعديل " + name);
+  ed.addEventListener("click", onEdit);
+
+  const del = document.createElement("button");
+  del.className = "del";
+  del.type = "button";
+  del.title = "حذف";
+  del.setAttribute("aria-label", "حذف " + name);
+  del.textContent = "×";
+  del.addEventListener("click", () => onDel(del));
+
+  acts.append(ed, del);
+  return acts;
+}
+
 function renderList(el, list, isOut, msgEl){
   el.innerHTML = "";
   if (!list.length){
     el.innerHTML = '<li class="empty">' + (isOut ? "ما فيه مطاعم مستبعدة." : "ما أضفت أي مطعم بعد.") + '</li>';
     return;
   }
-  list.forEach((r, idx) => {
+  list.forEach(r => {
     const li = document.createElement("li");
     li.className = "entry";
 
@@ -1248,28 +1303,43 @@ function renderList(el, list, isOut, msgEl){
       body.appendChild(p);
     }
 
-    const del = document.createElement("button");
-    del.className = "del";
-    del.type = "button";
-    del.title = "حذف";
-    del.setAttribute("aria-label", "حذف " + r.name);
-    del.textContent = "×";
-    del.addEventListener("click", async () => {
-      del.disabled = true;
+    const onEdit = () => {
+      if (isOut){
+        editing.excluded = r;
+        $("oName").value = r.name;
+        $("oWhy").value  = r.why || "";
+        $("oLogo").value = r.logo || "";
+        $("oAdd").textContent = "احفظ التعديل";
+        $("oAddCancel").style.display = "";
+        $("oName").focus();
+      } else {
+        editing.trying = r;
+        $("pName").value = r.name;
+        $("pNote").value = r.note || "";
+        $("pLogo").value = r.logo || "";
+        $("pAdd").textContent = "احفظ التعديل";
+        $("pAddCancel").style.display = "";
+        $("pName").focus();
+      }
+    };
+
+    const onDel = async btn => {
+      btn.disabled = true;
       const backup = list.slice();
-      list.splice(idx, 1);
+      const i = list.indexOf(r);
+      list.splice(i, 1);
       try{
         await savePipeline("حذف " + r.name);
         renderAdminLists(); renderPipeline();
         say(msgEl, "انحذف " + r.name + ".", "ok");
       }catch(e){
         if (isOut) excluded = backup; else pipeline = backup;
-        del.disabled = false;
+        btn.disabled = false;
         say(msgEl, "ما انحذف: " + errText(e), "err");
       }
-    });
+    };
 
-    li.append(logoEl(r), body, del);
+    li.append(logoEl(r), body, actionBtns(onEdit, onDel, r.name));
     el.appendChild(li);
   });
 }
@@ -1302,14 +1372,21 @@ function renderRatedAdmin(){
     det.textContent = "دجاج " + r.chicken + " · ثوم " + r.garlic + " · " + r.price + " ر.س → " + fmtScore(scoreOf(r));
     body.append(nm, det);
 
-    const del = document.createElement("button");
-    del.className = "del";
-    del.type = "button";
-    del.title = "حذف";
-    del.setAttribute("aria-label", "حذف تقييم " + r.name);
-    del.textContent = "×";
-    del.addEventListener("click", async () => {
-      del.disabled = true;
+    const onEdit = () => {
+      editing.rated = r;
+      $("rName").value    = r.name;
+      $("rChicken").value = r.chicken;
+      $("rGarlic").value  = r.garlic;
+      $("rPrice").value   = r.price;
+      $("rLogo").value    = r.logo || "";
+      $("rAdd").textContent = "احفظ التعديل";
+      $("rAddCancel").style.display = "";
+      previewScore();
+      $("rName").focus();
+    };
+
+    const onDel = async btn => {
+      btn.disabled = true;
       const backup = rated.slice();
       rated = rated.filter(x => x !== r);
       try{
@@ -1318,15 +1395,42 @@ function renderRatedAdmin(){
         say($("rMsg"), "انحذف " + r.name + ".", "ok");
       }catch(e){
         rated = backup;
-        del.disabled = false;
+        btn.disabled = false;
         say($("rMsg"), "ما انحذف: " + errText(e), "err");
       }
-    });
+    };
 
-    li.append(logoEl(r), body, del);
+    li.append(logoEl(r), body, actionBtns(onEdit, onDel, r.name));
     el.appendChild(li);
   });
 }
+
+/* إلغاء وضع التعديل */
+function resetForm(kind){
+  if (kind === "trying"){
+    editing.trying = null;
+    $("pName").value = $("pNote").value = $("pLogo").value = "";
+    $("pPrev").style.display = "none";
+    $("pAdd").textContent = "أضف المطعم";
+    $("pAddCancel").style.display = "none";
+  } else if (kind === "rated"){
+    editing.rated = null;
+    $("rName").value = $("rChicken").value = $("rGarlic").value = $("rPrice").value = $("rLogo").value = "";
+    $("rPrev").style.display = "none";
+    $("rCalc").textContent = "";
+    $("rAdd").textContent = "أضف التقييم";
+    $("rAddCancel").style.display = "none";
+  } else {
+    editing.excluded = null;
+    $("oName").value = $("oWhy").value = $("oLogo").value = "";
+    $("oPrev").style.display = "none";
+    $("oAdd").textContent = "أضف للخارجين";
+    $("oAddCancel").style.display = "none";
+  }
+}
+$("pAddCancel").addEventListener("click", () => resetForm("trying"));
+$("rAddCancel").addEventListener("click", () => resetForm("rated"));
+$("oAddCancel").addEventListener("click", () => resetForm("excluded"));
 
 /* معاينة حيّة للدرجة قبل الحفظ */
 function previewScore(){
@@ -1351,118 +1455,74 @@ $("rAdd").addEventListener("click", async () => {
   if (!(pn > 0)){ say(rMsg, "السعر لازم يكون أكبر من صفر.", "err"); return; }
 
   const dup = findPlace(name);
-  if (dup && dup.where === "rated"){ say(rMsg, name + " مقيّم من قبل — احذفه أول.", "err"); return; }
-
-  const b = $("rAdd");
-  b.disabled = true;
-  b.textContent = "جاري الحفظ…";
-  const backup = rated.slice();
-  rated.push({ name, logo: $("rLogo").value.trim(), chicken: cn, garlic: gn, price: pn });
-  try{
-    await savePipeline("تقييم " + name);
-    $("rName").value = $("rChicken").value = $("rGarlic").value = $("rPrice").value = $("rLogo").value = "";
-    $("rPrev").style.display = "none";
-    $("rCalc").textContent = "";
-    renderAdminLists(); renderPipeline();
-    say(rMsg, "انضاف تقييم " + name + ".", "ok");
-  }catch(e){
-    rated = backup;
-    say(rMsg, "ما انحفظ: " + errText(e), "err");
-  }finally{
-    b.disabled = false;
-    b.textContent = "أضف التقييم";
-  }
-});
-
-/* معاينة اللوقو */
-function hookPreview(inputId, prevId){
-  const prev = $(prevId);
-  $(inputId).addEventListener("input", e => {
-    const url = e.target.value.trim();
-    if (!url){ prev.style.display = "none"; return; }
-    prev.onerror = () => { prev.style.display = "none"; };
-    prev.onload  = () => { prev.style.display = "block"; };
-    prev.src = url;
-  });
-}
-hookPreview("pLogo", "pPrev");
-hookPreview("oLogo", "oPrev");
-hookPreview("rLogo", "rPrev");
-
-/* الاسم موجود في أي من القائمتين؟ */
-function findPlace(name){
-  const n = norm(name);
-  const t = pipeline.find(r => norm(r.name) === n);
-  if (t) return { where:"trying", item:t };
-  const v = rated.find(r => norm(r.name) === n);
-  if (v) return { where:"rated", item:v };
-  const x = excluded.find(r => norm(r.name) === n);
-  if (x) return { where:"excluded", item:x };
-  return null;
-}
-
-/* إضافة إلى "أجربها" */
-$("pAdd").addEventListener("click", async () => {
-  const nameEl = $("pName"), noteEl = $("pNote"), urlEl = $("pLogo");
-  const name = nameEl.value.trim();
-  if (!name){ say(pMsg, "اكتب اسم المطعم.", "err"); nameEl.focus(); return; }
-  const dup = findPlace(name);
-  if (dup){
-    say(pMsg, name + (dup.where === "trying" ? " موجود بالقائمة." : " موجود ضمن الخارجين."), "err");
+  if (dup && dup.item !== editing.rated){
+    say(rMsg, name + (dup.where === "rated" ? " مقيّم من قبل."
+        : dup.where === "trying" ? " موجود تحت التجربة — احذفه منها أول." : " موجود ضمن الخارجين."), "err");
     return;
   }
 
-  const b = $("pAdd");
+  const b = $("rAdd");
+  const isEdit = !!editing.rated;
   b.disabled = true;
   b.textContent = "جاري الحفظ…";
-  const backup = pipeline.slice();
-  pipeline.push({ name, logo: urlEl.value.trim(), note: noteEl.value.trim() });
+
+  const backup = JSON.stringify(rated);
+  const fields = { name, logo: $("rLogo").value.trim(), chicken: cn, garlic: gn, price: pn };
+  if (isEdit) Object.assign(editing.rated, fields);
+  else rated.push(fields);
+
   try{
-    await savePipeline("إضافة " + name);
-    nameEl.value = noteEl.value = urlEl.value = "";
-    $("pPrev").style.display = "none";
+    await savePipeline((isEdit ? "تعديل تقييم " : "تقييم ") + name);
+    resetForm("rated");
     renderAdminLists(); renderPipeline();
-    say(pMsg, "انضاف " + name + ".", "ok");
+    say(rMsg, (isEdit ? "انحفظ التعديل على " : "انضاف تقييم ") + name + ".", "ok");
   }catch(e){
-    pipeline = backup;
-    say(pMsg, "ما انحفظ: " + errText(e), "err");
+    rated = JSON.parse(backup);
+    say(rMsg, "ما انحفظ: " + errText(e), "err");
+    b.textContent = isEdit ? "احفظ التعديل" : "أضف التقييم";
   }finally{
     b.disabled = false;
-    b.textContent = "أضف المطعم";
+    if (!editing.rated && b.textContent === "جاري الحفظ…") b.textContent = "أضف التقييم";
   }
 });
 
-/* إضافة إلى "خارج التقييم" */
+/* إضافة أو تعديل في "خارج التقييم" */
 $("oAdd").addEventListener("click", async () => {
-  const nameEl = $("oName"), whyEl = $("oWhy"), urlEl = $("oLogo");
   const oMsg = $("oMsg");
-  const name = nameEl.value.trim();
-  const why  = whyEl.value.trim();
-  if (!name){ say(oMsg, "اكتب اسم المطعم.", "err"); nameEl.focus(); return; }
-  if (!why){ say(oMsg, "اكتب السبب — هو أهم شي في هذا القسم.", "err"); whyEl.focus(); return; }
+  const name = $("oName").value.trim();
+  const why  = $("oWhy").value.trim();
+  if (!name){ say(oMsg, "اكتب اسم المطعم.", "err"); $("oName").focus(); return; }
+  if (!why){ say(oMsg, "اكتب السبب — هو أهم شي في هذا القسم.", "err"); $("oWhy").focus(); return; }
+
   const dup = findPlace(name);
-  if (dup){
-    say(oMsg, name + (dup.where === "excluded" ? " موجود ضمن الخارجين." : " موجود في قائمة التجربة — احذفه منها أول."), "err");
+  if (dup && dup.item !== editing.excluded){
+    say(oMsg, name + (dup.where === "excluded" ? " موجود ضمن الخارجين."
+        : " موجود في قائمة ثانية — احذفه منها أول."), "err");
     return;
   }
 
   const b = $("oAdd");
+  const isEdit = !!editing.excluded;
   b.disabled = true;
   b.textContent = "جاري الحفظ…";
-  const backup = excluded.slice();
-  excluded.push({ name, logo: urlEl.value.trim(), why });
+
+  const backup = JSON.stringify(excluded);
+  const fields = { name, logo: $("oLogo").value.trim(), why };
+  if (isEdit) Object.assign(editing.excluded, fields);
+  else excluded.push(fields);
+
   try{
-    await savePipeline("استبعاد " + name);
-    nameEl.value = whyEl.value = urlEl.value = "";
-    $("oPrev").style.display = "none";
+    await savePipeline((isEdit ? "تعديل " : "استبعاد ") + name);
+    resetForm("excluded");
     renderAdminLists(); renderPipeline();
-    say(oMsg, "انضاف " + name + " للخارجين.", "ok");
+    say(oMsg, (isEdit ? "انحفظ التعديل على " : "انضاف ") + name + ".", "ok");
   }catch(e){
-    excluded = backup;
+    excluded = JSON.parse(backup);
     say(oMsg, "ما انحفظ: " + errText(e), "err");
+    b.textContent = isEdit ? "احفظ التعديل" : "أضف للخارجين";
   }finally{
     b.disabled = false;
-    b.textContent = "أضف للخارجين";
+    if (!editing.excluded && b.textContent === "جاري الحفظ…") b.textContent = "أضف للخارجين";
   }
 });
 
