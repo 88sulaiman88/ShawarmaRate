@@ -624,23 +624,18 @@ const MAIL_TO = "51bc167097d57b8243d6de194d852aff";
 
 const FORM_URL = "https://formsubmit.co/ajax/" + MAIL_TO;
 
-/* ==========================================================
-   ٣) كلمة مرور الأدمن — محفوظة كهاش (PBKDF2, 250k)
-      الحالية: shawarma   ← غيّرها من داخل اللوحة
-   ========================================================== */
 const AUTH = {
-  salt: "095b1cf602b2e591d2f372ee6921efce",
-  hash: "83dc4882b5414f2cb4931f48dbcfda567e50761857d141812faec2d80df75bb3",
+  salt: "355da06726f88b82bb360da97a349c1a",
+  hash: "5eeaab801f326d6df8b6ca8e07e443ff086836b9696aaa5b448e74380ff00d93",
   iterations: 250000
 };
 
-/* ==========================================================
-   ٤) التوكن مشفّراً بكلمة المرور — ولّده من داخل اللوحة
-      وانسخ الناتج مكان TOKEN_ENC هنا.
-   ========================================================== */
-const TOKEN_ENC = { salt: "", iv: "", data: "" };
-
-/* ---------- أدوات ---------- */
+const TOKEN_ENC = {
+  salt: "ac46706111548331746f6f8da10b665e",
+  iv:   "fb8c5914fabeeba71a29d341",
+  data: "6a47ba25348cbbf682b61c6caa689375f8e018c7344bfda9152d1d7c8078cba9fb9b9e3e545a1b9f8c882018b4fce585723de77b2c7289e5d07793d6cd1b6f4d348e505852f21c14e72d9eaf20eb8427f503df8b2653260eb28eedf7663bb2a054ead43e5fe4d82685c499e7d7"
+};
+  
 const $ = id => document.getElementById(id);
 const say = (el, text, kind) => { el.textContent = text; el.className = (el.className.split(" ")[0] || "msg") + (kind ? " " + kind : ""); };
 /* تطبيع الاسم: يتجاهل الهمزة والتشكيل والمسافات و"ال" التعريف
