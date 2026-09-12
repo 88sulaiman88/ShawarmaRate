@@ -59,6 +59,11 @@
       "name": "شفيق",
       "logo": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTbnULwk81V8E9iFZrhe0XieyT9Cnr16Kin1whDfRVNKuonu4ZkSCurIr4&s=10",
       "note": ""
+    },
+    {
+      "name": "مقصود",
+      "logo": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSsTcIf34Rw_ZObeTBMEuO-LoTSuDnpYnXtmrixys44RQ&s=10",
+      "note": ""
     }
   ],
   "rated": [
@@ -123,7 +128,7 @@
       "logo": "https://images.deliveryhero.io/image/hungerstation/restaurant/logo_ar/eb46e420c65e6e4e1fc3c6ff6e93be9f.jpg",
       "chicken": 9,
       "garlic": 9,
-      "price": 8
+      "price": 2
     },
     {
       "name": "شاورمر",
