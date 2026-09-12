@@ -79,11 +79,6 @@
       "name": "شاورما حواري",
       "logo": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRaEK5VB-99S_G06pAT4ckuox3YQ0Ei8XCCqWaLkdP56w&s=10",
       "note": ""
-    },
-    {
-      "name": "أبو ريان",
-      "logo": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQrdD9Pvnr6DrICoK0ir4HJklunS7NFkex4mfWJHYH6uB9SWQ459x5adIs&s=10",
-      "note": ""
     }
   ],
   "rated": [
@@ -148,7 +143,7 @@
       "logo": "https://images.deliveryhero.io/image/hungerstation/restaurant/logo_ar/eb46e420c65e6e4e1fc3c6ff6e93be9f.jpg",
       "chicken": 9,
       "garlic": 9,
-      "price": 2
+      "price": 8
     },
     {
       "name": "شاورمر",
