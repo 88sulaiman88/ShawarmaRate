@@ -209,6 +209,13 @@
       "chicken": 9,
       "garlic": 10,
       "price": 7
+    },
+    {
+      "name": "مسكتة",
+      "logo": "https://images.deliveryhero.io/image/hungerstation/restaurant/logo_ar/fc709e52b1052e080a7db133f41a9247.jpg?width=256&quality=75&webp=true",
+      "chicken": 6,
+      "garlic": 10,
+      "price": 7
     }
   ],
   "excluded": [
