@@ -202,6 +202,13 @@
       "chicken": 7,
       "garlic": 4,
       "price": 6
+    },
+    {
+      "name": "سفرة السلطان",
+      "logo": "https://images.deliveryhero.io/image/hungerstation/restaurant/logo_ar/7d99c02bf61fcce1e6bd93a20fb81bfc.jpg",
+      "chicken": 9,
+      "garlic": 10,
+      "price": 7
     }
   ],
   "excluded": [
