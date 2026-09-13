@@ -179,6 +179,13 @@
       "chicken": 2,
       "garlic": 2,
       "price": 6
+    },
+    {
+      "name": "شاورما فهد",
+      "logo": "",
+      "chicken": 1,
+      "garlic": 2,
+      "price": 7
     }
   ],
   "excluded": [
