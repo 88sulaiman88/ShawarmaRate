@@ -188,6 +188,13 @@
       "chicken": 7,
       "garlic": 7,
       "price": 7
+    },
+    {
+      "name": "شاورما جليلة",
+      "logo": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRgvBIk28DUdW8T4-JIEvJX4LZQgrErTzE8GtJkdgqyrw&s=10",
+      "chicken": 1,
+      "garlic": 2,
+      "price": 7
     }
   ],
   "excluded": [
