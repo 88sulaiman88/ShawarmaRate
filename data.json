@@ -172,6 +172,13 @@
       "chicken": 5,
       "garlic": 4,
       "price": 6
+    },
+    {
+      "name": "زاوية الديار",
+      "logo": "https://lh3.googleusercontent.com/gps-cs-s/AHRPTWmNVeXb6k3kmM0B9KzvX7cMeRntd3hSEg_a5ILHj_OPesIdwYKytT7d2CKATDv-rN4gWuQbaLdMxZYeR_m-7CVDydgj743S0Wsm_b-zi4etkgORSWsfcahRFL-TZz1uNDjLgti5=s1360-w1360-h1020-rw",
+      "chicken": 2,
+      "garlic": 2,
+      "price": 6
     }
   ],
   "excluded": [
