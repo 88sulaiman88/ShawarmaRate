@@ -190,6 +190,13 @@
       "chicken": 1,
       "garlic": 2,
       "price": 7
+    },
+    {
+      "name": "دخنة",
+      "logo": "https://images.deliveryhero.io/image/hungerstation/restaurant/logo_ar/f6ceb32c1b31c8f3578cc498d32c9150.jpg",
+      "chicken": 8,
+      "garlic": 4,
+      "price": 6
     }
   ],
   "excluded": [
