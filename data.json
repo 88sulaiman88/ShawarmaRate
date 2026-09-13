@@ -181,6 +181,13 @@
       "chicken": 1,
       "garlic": 2,
       "price": 7
+    },
+    {
+      "name": "الوجبة",
+      "logo": "https://i.imgur.com/IOBCyR8.png",
+      "chicken": 7,
+      "garlic": 7,
+      "price": 7
     }
   ],
   "excluded": [
