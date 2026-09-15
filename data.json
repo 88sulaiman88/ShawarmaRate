@@ -213,6 +213,13 @@
       "chicken": 4,
       "garlic": 6,
       "price": 6
+    },
+    {
+      "name": "مقصود",
+      "logo": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSsTcIf34Rw_ZObeTBMEuO-LoTSuDnpYnXtmrixys44RQ&s=10",
+      "chicken": 4,
+      "garlic": 10,
+      "price": 8
     }
   ],
   "excluded": [
