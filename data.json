@@ -215,6 +215,13 @@
       "chicken": 4,
       "garlic": 10,
       "price": 8
+    },
+    {
+      "name": "طيبات المدينة",
+      "logo": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQPU7rttXahkJj_UaRmc4SEU7hRTszfKPwlUDb9T27lSvv_4hA4faHL9GcK&s=10",
+      "chicken": 0,
+      "garlic": 3,
+      "price": 8
     }
   ],
   "excluded": [
