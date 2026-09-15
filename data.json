@@ -222,6 +222,13 @@
       "chicken": 0,
       "garlic": 3,
       "price": 8
+    },
+    {
+      "name": "شجرة ليمون",
+      "logo": "https://images.deliveryhero.io/image/hungerstation/restaurant/logo_ar/4f3775fce9d80a91d281b356929b15e7.jpg",
+      "chicken": 4,
+      "garlic": 4,
+      "price": 9
     }
   ],
   "excluded": [
