@@ -231,6 +231,13 @@
       "chicken": 5,
       "garlic": 5,
       "price": 7
+    },
+    {
+      "name": "الخندلة",
+      "logo": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ-QJ3DqlJdu8iMeoeWgCFWx0AvNyqMR6TTapy79L8SSz8GhBZZZI4EKyMR&s=10",
+      "chicken": 7,
+      "garlic": 10,
+      "price": 6
     }
   ],
   "excluded": [
