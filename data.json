@@ -229,6 +229,13 @@
       "chicken": 4,
       "garlic": 4,
       "price": 9
+    },
+    {
+      "name": "شلال تيسير",
+      "logo": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcShhRbMby8aYnAoIXY2NmlM7vBgtsG7ASDyQX5OofcFwjiDbqWPruzZrQ4&s=10",
+      "chicken": 5,
+      "garlic": 5,
+      "price": 7
     }
   ],
   "excluded": [
