@@ -261,6 +261,13 @@
       "chicken": 6,
       "garlic": 10,
       "price": 7
+    },
+    {
+      "name": "فريدة هانم",
+      "logo": "https://images.deliveryhero.io/image/hungerstation/restaurant/logo_ar/165bc1a7d637f32abab4b7686658752a.JPG",
+      "chicken": 6,
+      "garlic": 4,
+      "price": 8
     }
   ],
   "excluded": [
