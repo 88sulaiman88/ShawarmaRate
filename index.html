@@ -624,31 +624,58 @@ const MAIL_TO = "51bc167097d57b8243d6de194d852aff";
 
 const FORM_URL = "https://formsubmit.co/ajax/" + MAIL_TO;
 
+/* ==========================================================
+   ٣) كلمة مرور الأدمن — محفوظة كهاش (PBKDF2, 250k)
+      الحالية: shawarma   ← غيّرها من داخل اللوحة
+   ========================================================== */
 const AUTH = {
   salt: "355da06726f88b82bb360da97a349c1a",
   hash: "5eeaab801f326d6df8b6ca8e07e443ff086836b9696aaa5b448e74380ff00d93",
   iterations: 250000
 };
 
+/* ==========================================================
+   ٤) التوكن مشفّراً بكلمة المرور — ولّده من داخل اللوحة
+      وانسخ الناتج مكان TOKEN_ENC هنا.
+   ========================================================== */
 const TOKEN_ENC = {
   salt: "ac46706111548331746f6f8da10b665e",
   iv:   "fb8c5914fabeeba71a29d341",
   data: "6a47ba25348cbbf682b61c6caa689375f8e018c7344bfda9152d1d7c8078cba9fb9b9e3e545a1b9f8c882018b4fce585723de77b2c7289e5d07793d6cd1b6f4d348e505852f21c14e72d9eaf20eb8427f503df8b2653260eb28eedf7663bb2a054ead43e5fe4d82685c499e7d7"
 };
-  
+
+/* ---------- أدوات ---------- */
 const $ = id => document.getElementById(id);
 const say = (el, text, kind) => { el.textContent = text; el.className = (el.className.split(" ")[0] || "msg") + (kind ? " " + kind : ""); };
-/* تطبيع الاسم: يتجاهل الهمزة والتشكيل والمسافات و"ال" التعريف
-   عشان "شاورما الاصيل" = "شاورما الأصيل" = "شاورماالأصيل" */
-const norm = s => (s || "")
+/* تطبيع الحروف: همزة، تشكيل، تاء مربوطة، ألف مقصورة، تطويل */
+const flatten = s => (s || "")
   .replace(/[\u064B-\u0652\u0640]/g, "")
   .replace(/[أإآٱ]/g, "ا")
   .replace(/[ؤئء]/g, "")
   .replace(/ى/g, "ي")
   .replace(/ة/g, "ه")
-  .replace(/[\s\u200e\u200f_\-.,،]/g, "")
-  .replace(/^ال/, "")
   .toLowerCase();
+
+/* المقارنة الحرفية: يتجاهل المسافات و"ال" التعريف */
+const norm = s => flatten(s)
+  .replace(/[\s\u200e\u200f_\-.,،]/g, "")
+  .replace(/^ال/, "");
+
+/* الكلمات العامة اللي ما تميّز مطعماً عن آخر */
+const GENERIC = ["مطعم","مطاعم","محل","مطبخ","شاورما","شورما","شاورمه","شاورمات","برودكاست","ركن"];
+
+/* نواة الاسم: نشيل الكلمات العامة و"ال" من كل كلمة
+   عشان "شاورما شفيق" = "مطعم شفيق" = "شفيق" */
+function core(name){
+  const words = flatten(name)
+    .replace(/[_\-.,،'"«»()]/g, " ")
+    .split(/\s+/)
+    .map(w => w.replace(/^ال/, ""))
+    .filter(w => w && !GENERIC.includes(w));
+  const joined = words.join("");
+  return joined || norm(name);   /* لو الاسم كله كلمات عامة، نرجع للمقارنة الحرفية */
+}
+
 const errText = e => (e && e.message) ? e.message : "خطأ غير معروف";
 
 const safeLocal = (() => {
@@ -1047,10 +1074,12 @@ async function submit(){
   if (!who){ say(msgEl, "ناقص اسمك.", "err"); $("who").focus(); return; }
   const found = findPlace(place);
   if (found){
+    /* لو الاسم المسجّل يختلف نصياً، نذكره عشان ما يحتار الزائر */
+    const as = norm(found.item.name) === norm(place) ? "" : " (مسجّل باسم " + found.item.name + ")";
     let m;
-    if (found.where === "trying")      m = place + " موجود بالفعل ضمن قائمة التجربة.";
-    else if (found.where === "rated")  m = place + " مقيّم فوق — شوف درجته في الجدول.";
-    else                               m = place + " خارج التقييم" + (found.item.why ? " — " + found.item.why : "") + ".";
+    if (found.where === "trying")      m = place + as + " موجود بالفعل ضمن قائمة التجربة.";
+    else if (found.where === "rated")  m = place + as + " مقيّم فوق — شوف درجته في الجدول.";
+    else                               m = place + as + " خارج التقييم" + (found.item.why ? " — " + found.item.why : "") + ".";
     say(msgEl, m, "err");
     return;
   }
@@ -1271,12 +1300,14 @@ hookPreview("rLogo", "rPrev");
 
 /* الاسم موجود في أي من القوائم الثلاث؟ */
 function findPlace(name){
-  const n = norm(name);
-  const t = pipeline.find(r => norm(r.name) === n);
+  const n = norm(name), c = core(name);
+  const same = r => norm(r.name) === n || core(r.name) === c;
+
+  const t = pipeline.find(same);
   if (t) return { where:"trying", item:t };
-  const v = rated.find(r => norm(r.name) === n);
+  const v = rated.find(same);
   if (v) return { where:"rated", item:v };
-  const x = excluded.find(r => norm(r.name) === n);
+  const x = excluded.find(same);
   if (x) return { where:"excluded", item:x };
   return null;
 }
