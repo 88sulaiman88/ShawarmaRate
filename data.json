@@ -255,6 +255,13 @@
       "chicken": 6,
       "garlic": 4,
       "price": 12
+    },
+    {
+      "name": "قراطيس",
+      "logo": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTCo3M3dXZfXqXlNimjfT4ylRp1Tyg5sGo6Lkv7U6AIYQ&s=10",
+      "chicken": 3,
+      "garlic": 5,
+      "price": 6
     }
   ],
   "excluded": [
