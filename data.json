@@ -253,6 +253,13 @@
       "chicken": 7,
       "garlic": 10,
       "price": 6
+    },
+    {
+      "name": "أوبيريشن فلافل",
+      "logo": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ8hshN7rNuk12DEO4-OSzwjTAqUmG95HlW_R5WFaceaw&s",
+      "chicken": 6,
+      "garlic": 4,
+      "price": 12
     }
   ],
   "excluded": [
