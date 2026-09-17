@@ -257,6 +257,13 @@
       "chicken": 3,
       "garlic": 5,
       "price": 6
+    },
+    {
+      "name": "شاورما كلاسيك",
+      "logo": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTjRmKvsKC8g-A8dt_LmaBu1QWTR24G_lUqTKTv8lu_nA&s=10",
+      "chicken": 3,
+      "garlic": 7,
+      "price": 7
     }
   ],
   "excluded": [
