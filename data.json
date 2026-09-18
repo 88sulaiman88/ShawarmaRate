@@ -268,6 +268,13 @@
       "chicken": 6,
       "garlic": 4,
       "price": 8
+    },
+    {
+      "name": "شاورما حواري",
+      "logo": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRaEK5VB-99S_G06pAT4ckuox3YQ0Ei8XCCqWaLkdP56w&s=10",
+      "chicken": 6,
+      "garlic": 4,
+      "price": 7
     }
   ],
   "excluded": [
