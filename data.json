@@ -270,6 +270,13 @@
       "chicken": 6,
       "garlic": 4,
       "price": 7
+    },
+    {
+      "name": "شزيز",
+      "logo": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTbKXoPjd9P1bAjXH5HrPwJM5IXPzZPXRpSYd7NX5FciQ&s=10",
+      "chicken": 6,
+      "garlic": 9,
+      "price": 8
     }
   ],
   "excluded": [
