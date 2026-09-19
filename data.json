@@ -276,6 +276,13 @@
       "chicken": 3,
       "garlic": 2,
       "price": 7
+    },
+    {
+      "name": "ورمشا",
+      "logo": "https://images.deliveryhero.io/image/hungerstation/restaurant/logo_ar/2913e263540354474ec1062bd1e6b979.jpg",
+      "chicken": 8,
+      "garlic": 5,
+      "price": 8
     }
   ],
   "excluded": [
