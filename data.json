@@ -293,6 +293,13 @@
       "chicken": 8,
       "garlic": 5,
       "price": 8
+    },
+    {
+      "name": "جمرا",
+      "logo": "https://lh3.googleusercontent.com/gpms-cs-s/AFP8RcP4P95oHzObJcqbCP61YnUzU09pAEL3jm2fTtQy2PFZKxTBjKgE8vwkJo7g5wQvFRo5p_5sqqDoBe-XevFFbbqge4YknJ-83cNH_7uGZ_qxy23d6N46w085sFSGp07Kfv8TPwt4mzw2y36K=s1024-v1",
+      "chicken": 4,
+      "garlic": 4,
+      "price": 7
     }
   ],
   "excluded": [
