@@ -6,6 +6,11 @@
       "note": ""
     },
     {
+      "name": "ورمشا",
+      "logo": "https://images.deliveryhero.io/image/hungerstation/restaurant/logo_ar/2913e263540354474ec1062bd1e6b979.jpg",
+      "note": ""
+    },
+    {
       "name": "شفيق",
       "logo": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTbnULwk81V8E9iFZrhe0XieyT9Cnr16Kin1whDfRVNKuonu4ZkSCurIr4&s=10",
       "note": ""
@@ -269,20 +274,6 @@
       "chicken": 0,
       "garlic": 4,
       "price": 9.5
-    },
-    {
-      "name": "امبراطور الشاورما",
-      "logo": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQbXeYTYp76KvYPBNzGChGA5wHyKZCW6BymmnR0qMn34wwdzpfD0s6ILd8&s=10",
-      "chicken": 2,
-      "garlic": 3,
-      "price": 7
-    },
-    {
-      "name": "ورمشا",
-      "logo": "https://images.deliveryhero.io/image/hungerstation/restaurant/logo_ar/2913e263540354474ec1062bd1e6b979.jpg",
-      "chicken": 8,
-      "garlic": 5,
-      "price": 7
     }
   ],
   "excluded": [
