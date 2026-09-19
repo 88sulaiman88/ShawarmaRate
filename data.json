@@ -272,6 +272,13 @@
       "chicken": 6,
       "garlic": 9,
       "price": 8
+    },
+    {
+      "name": "شاورما حبتين",
+      "logo": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSxwax4YDYJNijOXCpIn7OnTeoavsPfbtKY_NZwObaqm8p9JzgYn2CX4-gL&s=10",
+      "chicken": 0,
+      "garlic": 4,
+      "price": 9.5
     }
   ],
   "excluded": [
