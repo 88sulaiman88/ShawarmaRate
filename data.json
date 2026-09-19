@@ -274,6 +274,13 @@
       "chicken": 0,
       "garlic": 4,
       "price": 9.5
+    },
+    {
+      "name": "امبراطور الشاورما",
+      "logo": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQbXeYTYp76KvYPBNzGChGA5wHyKZCW6BymmnR0qMn34wwdzpfD0s6ILd8&s=10",
+      "chicken": 3,
+      "garlic": 2,
+      "price": 7
     }
   ],
   "excluded": [
