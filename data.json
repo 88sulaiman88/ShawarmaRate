@@ -1,11 +1,6 @@
 {
   "trying": [
     {
-      "name": "صدف اللؤلؤة",
-      "logo": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRhGXjKNRuGvYt89e21l4KNXynQBZo7D3lTZIrk6ycZ3Q&s=10",
-      "note": ""
-    },
-    {
       "name": "لهيبة",
       "logo": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR_lGFvYW3I-KEtwceSGPgje8ynzORIElqyOTVUqwvYXScG9tr0yc4hVbc&s=10",
       "note": ""
@@ -48,7 +43,7 @@
     {
       "name": "بيت الشاورما",
       "logo": "https://images.deliveryhero.io/image/hungerstation/restaurant/logo_ar/0a780aa9b334f270e12a3f12cfea4132.jpg?width=256&quality=75&webp=true",
-      "chicken": 1.5,
+      "chicken": 1,
       "garlic": 3,
       "price": 7
     },
@@ -259,7 +254,7 @@
       "name": "امبراطور الشاورما",
       "logo": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQbXeYTYp76KvYPBNzGChGA5wHyKZCW6BymmnR0qMn34wwdzpfD0s6ILd8&s=10",
       "chicken": 3,
-      "garlic": 1,
+      "garlic": 1.5,
       "price": 7
     },
     {
