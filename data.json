@@ -289,6 +289,13 @@
       "chicken": 7,
       "garlic": 5,
       "price": 8
+    },
+    {
+      "name": "ادار",
+      "logo": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQHZPrikv_Ktb9ywhQSh896BRW41BAKWaFRbSgJ7RIuTOJ2TlX2xyZ7jvw&s=10",
+      "chicken": 10,
+      "garlic": 10,
+      "price": 7
     }
   ],
   "excluded": [
