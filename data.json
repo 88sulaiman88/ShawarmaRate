@@ -294,6 +294,13 @@
       "chicken": 7,
       "garlic": 5,
       "price": 8
+    },
+    {
+      "name": "شفيق",
+      "logo": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTbnULwk81V8E9iFZrhe0XieyT9Cnr16Kin1whDfRVNKuonu4ZkSCurIr4&s=10",
+      "chicken": 7,
+      "garlic": 5,
+      "price": 8
     }
   ],
   "excluded": [
