@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+ <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="utf-8">
@@ -148,8 +148,10 @@
   .rt-score{font-size:17px;font-weight:600;color:var(--blue)}
   .rt-of{font-size:12.5px;color:var(--faint);font-weight:400}
   .face{display:inline-block;vertical-align:middle}
-  .facewrap{position:relative;display:inline-block;line-height:0;cursor:pointer}
-  .facewrap::after{
+  .facewrap,.star{position:relative;display:inline-block;line-height:0;cursor:pointer}
+  .star{margin-inline-start:6px;vertical-align:-2px}
+  .star svg{display:block}
+  .facewrap::after,.star::after{
     content:attr(data-lbl);
     position:absolute;bottom:calc(100% + 7px);left:50%;
     transform:translateX(-50%);
@@ -159,7 +161,26 @@
     white-space:nowrap;opacity:0;pointer-events:none;
     transition:opacity .15s;
   }
-  .facewrap:hover::after,.facewrap:focus-visible::after,.facewrap.show::after{opacity:1}
+  .facewrap:hover::after,.facewrap:focus-visible::after,.facewrap.show::after,
+  .star:hover::after,.star:focus-visible::after,.star.show::after{opacity:1}
+
+  .searchbox{
+    display:flex;align-items:center;gap:8px;
+    max-width:300px;margin:0 auto;
+    border:1px solid var(--line);border-radius:4px;
+    padding:0 11px;background:#fff;
+  }
+  .searchbox input{
+    border:0;padding:10px 0;font-size:15px;background:none;
+  }
+  .searchbox input:focus{box-shadow:none}
+  .searchbox:focus-within{border-color:var(--blue);box-shadow:0 0 0 3px rgba(27,68,200,.10)}
+  .searchbox svg{flex:0 0 16px;color:var(--faint)}
+  .clearq{
+    background:none;border:0;padding:0 2px;color:var(--faint);
+    font-size:17px;line-height:1;cursor:pointer;display:none;
+  }
+  .clearq:hover{background:none;color:var(--ink)}
   .exc{
     display:inline-block;
     font-size:11.5px;font-weight:600;color:#fff;
@@ -392,6 +413,15 @@
 <section class="band band-rating">
   <div class="wrap center">
     <h2>مطاعم جرّبتها:</h2>
+
+    <div class="searchbox" style="margin-bottom:6px">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+        <circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5" stroke-linecap="round"/>
+      </svg>
+      <input id="search" type="search" placeholder="ابحث عن مطعم…" aria-label="ابحث عن مطعم" autocomplete="off">
+      <button class="clearq" id="clearq" type="button" aria-label="امسح البحث">×</button>
+    </div>
+
     <div id="ratedBox"></div>
     <select class="sortsel" id="sortSel" aria-label="ترتيب الجدول">
       <option value="score">الأعلى تقييماً</option>
@@ -625,8 +655,9 @@ const MAIL_TO = "51bc167097d57b8243d6de194d852aff";
 const FORM_URL = "https://formsubmit.co/ajax/" + MAIL_TO;
 
 /* ==========================================================
-   ٣) كلمة مرور الأدمن — محفوظة كهاش (PBKDF2, 250k)
-      الحالية: shawarma   ← غيّرها من داخل اللوحة
+   ٣) كلمة مرور الأدمن — الكلمة نفسها غير مكتوبة هنا،
+      المحفوظ هاشها فقط (PBKDF2-HMAC-SHA256، ٢٥٠ ألف تكرار).
+      لتغييرها: اللوحة ← تغيير كلمة المرور.
    ========================================================== */
 const AUTH = {
   salt: "355da06726f88b82bb360da97a349c1a",
@@ -750,8 +781,9 @@ function renderInto(el, list, isOut, emptyText){
 }
 
 function renderPipeline(){
-  renderInto($("stack"), pipeline, false, "القائمة فاضية حالياً.");
-  renderInto($("stackOut"), excluded, true, "ما فيه مطاعم مستبعدة.");
+  const noHit = "ما فيه نتيجة هنا.";
+  renderInto($("stack"),    pipeline.filter(matches), false, query ? noHit : "القائمة فاضية حالياً.");
+  renderInto($("stackOut"), excluded.filter(matches), true,  query ? noHit : "ما فيه مطاعم مستبعدة.");
   renderRated();
 }
 
@@ -798,16 +830,56 @@ function label(n){
 }
 
 function markFor(v){
-  if (Number(v) === 10) return '<span class="exc">استثنائي</span>';
-  return '<span class="facewrap" tabindex="0" role="img" aria-label="' + label(v) +
-         '" data-lbl="' + label(v) + '">' + faceSVG(v) + '</span>';
+  const tip = label(v) + " " + v + "/10";
+  if (Number(v) === 10) return '<span class="facewrap" tabindex="0" role="img" aria-label="' + tip +
+                               '" data-lbl="' + tip + '"><span class="exc">استثنائي</span></span>';
+  return '<span class="facewrap" tabindex="0" role="img" aria-label="' + tip +
+         '" data-lbl="' + tip + '">' + faceSVG(v) + '</span>';
+}
+
+/* نجمة سليمان: ١٠ في الدجاج و١٠ في الثوم — السعر ما له دخل */
+const isStar = r => Number(r.chicken) === 10 && Number(r.garlic) === 10;
+
+function starEl(){
+  const s = document.createElement("span");
+  s.className = "star";
+  s.tabIndex = 0;
+  s.setAttribute("role", "img");
+  s.setAttribute("aria-label", "نجمة سليمان");
+  s.dataset.lbl = "نجمة سليمان";
+  s.innerHTML = '<svg width="17" height="17" viewBox="0 0 24 24" fill="' + "#1B44C8" + '" aria-hidden="true">' +
+    '<path d="M12 2.6l2.9 5.9 6.5.9-4.7 4.6 1.1 6.5-5.8-3-5.8 3 1.1-6.5L2.6 9.4l6.5-.9z"/></svg>';
+  return s;
 }
 
 /* الضغط على الوجه يظهر التصنيف (للجوال) */
 document.addEventListener("click", e => {
-  const w = e.target.closest(".facewrap");
-  document.querySelectorAll(".facewrap.show").forEach(x => { if (x !== w) x.classList.remove("show"); });
+  const w = e.target.closest(".facewrap, .star");
+  document.querySelectorAll(".facewrap.show, .star.show").forEach(x => { if (x !== w) x.classList.remove("show"); });
   if (w) w.classList.toggle("show");
+});
+
+/* ---------- البحث ---------- */
+let query = "";
+
+/* يطابق بالاسم الحرفي أو بالنواة، جزئياً */
+function matches(r){
+  if (!query) return true;
+  const n = norm(query), c = core(query);
+  return norm(r.name).includes(n) || core(r.name).includes(c);
+}
+
+$("search").addEventListener("input", e => {
+  query = e.target.value.trim();
+  $("clearq").style.display = query ? "block" : "none";
+  renderPipeline();
+});
+$("clearq").addEventListener("click", () => {
+  $("search").value = "";
+  query = "";
+  $("clearq").style.display = "none";
+  renderPipeline();
+  $("search").focus();
 });
 
 /* ---------- الجدول ---------- */
@@ -815,7 +887,7 @@ let sortKey = "score", sortDir = -1;
 const DEFAULT_DIR = { score:-1, chicken:-1, garlic:-1, price:1 };
 
 function sortedRated(){
-  const list = rated.slice();
+  const list = rated.filter(matches);
   list.sort((a, b) => {
     const val = r => sortKey === "score" ? scoreOf(r) : Number(r[sortKey]);
     let d = (val(a) - val(b)) * sortDir;
@@ -833,8 +905,9 @@ function renderRated(){
   box.innerHTML = "";
   $("sortSel").style.display = "";
 
-  if (!rated.length){
-    box.innerHTML = '<p class="empty" style="margin-top:22px">ما فيه تقييمات بعد.</p>';
+  if (!rated.length || !rated.filter(matches).length){
+    box.innerHTML = '<p class="empty" style="margin-top:22px">' +
+      (query ? "ما فيه نتيجة هنا." : "ما فيه تقييمات بعد.") + '</p>';
     $("sortSel").style.display = "none";
     return;
   }
@@ -880,15 +953,24 @@ function renderRated(){
   table.appendChild(thead);
 
   const tbody = document.createElement("tbody");
-  const list = sortedRated();
-  const view = list;
+  const view = sortedRated();
+
+  /* ترتيب تنافسي: المتساويان يأخذان نفس الرقم، واللي بعدهما يقفز */
+  const valOf = r => sortKey === "score" ? Number(fmtScore(scoreOf(r))) : Number(r[sortKey]);
+  const ranks = [];
+  let prevVal = null, prevRank = 0;
+  view.forEach((r, i) => {
+    const v = valOf(r);
+    if (prevVal !== null && v === prevVal){ ranks.push(prevRank); }
+    else { ranks.push(i + 1); prevRank = i + 1; prevVal = v; }
+  });
 
   view.forEach((r, i) => {
     const tr = document.createElement("tr");
 
     const tdN = document.createElement("td");
     tdN.className = "cell-n";
-    tdN.textContent = i + 1;
+    tdN.textContent = ranks[i];
     tr.appendChild(tdN);
 
     const tdP = document.createElement("td");
@@ -898,6 +980,7 @@ function renderRated(){
     const nm = document.createElement("div");
     nm.className = "rt-name";
     nm.textContent = r.name;
+    if (isStar(r)) nm.appendChild(starEl());
     wrapEl.append(logoEl(r), nm);
     tdP.appendChild(wrapEl);
     tr.appendChild(tdP);
