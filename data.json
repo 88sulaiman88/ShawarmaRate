@@ -298,6 +298,13 @@
       "chicken": 9,
       "garlic": 7,
       "price": 7
+    },
+    {
+      "name": "صدف اللؤلؤة",
+      "logo": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRhGXjKNRuGvYt89e21l4KNXynQBZo7D3lTZIrk6ycZ3Q&s=10",
+      "chicken": 8,
+      "garlic": 5,
+      "price": 7
     }
   ],
   "excluded": [
