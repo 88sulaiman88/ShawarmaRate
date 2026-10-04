@@ -292,6 +292,13 @@
       "chicken": 0,
       "garlic": 2,
       "price": 7
+    },
+    {
+      "name": "هليل",
+      "logo": "https://images.deliveryhero.io/image/hungerstation/restaurant/logo_ar/28819ea73dc87c464a546e6e1df35493.png",
+      "chicken": 7,
+      "garlic": 5,
+      "price": 8
     }
   ],
   "excluded": [
