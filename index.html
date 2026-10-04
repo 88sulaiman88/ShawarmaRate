@@ -562,11 +562,11 @@
           <div class="scores">
             <div class="field">
               <label for="rChicken">الدجاج <span class="hint">٠–١٠</span></label>
-              <input id="rChicken" type="number" min="0" max="10" step="1" inputmode="numeric">
+              <input id="rChicken" type="number" min="0" max="10" step="0.1" inputmode="decimal">
             </div>
             <div class="field">
               <label for="rGarlic">الثوم <span class="hint">٠–١٠</span></label>
-              <input id="rGarlic" type="number" min="0" max="10" step="1" inputmode="numeric">
+              <input id="rGarlic" type="number" min="0" max="10" step="0.1" inputmode="decimal">
             </div>
             <div class="field">
               <label for="rPrice">السعر <span class="hint">ريال</span></label>
@@ -889,7 +889,7 @@ let sortKey = "score", sortDir = -1;
 const DEFAULT_DIR = { score:-1, chicken:-1, garlic:-1, price:1 };
 
 function sortedRated(){
-  const list = rated.filter(matches);
+  const list = rated.slice();
   list.sort((a, b) => {
     const val = r => sortKey === "score" ? scoreOf(r) : Number(r[sortKey]);
     let d = (val(a) - val(b)) * sortDir;
@@ -907,7 +907,10 @@ function renderRated(){
   box.innerHTML = "";
   $("sortSel").style.display = "";
 
-  if (!rated.length || !rated.filter(matches).length){
+  const full = sortedRated();          /* القائمة كاملة — منها تُحسب المراتب */
+  const view = full.filter(matches);   /* المعروض بعد البحث */
+
+  if (!view.length){
     box.innerHTML = '<p class="empty" style="margin-top:22px">' +
       (query ? "ما فيه نتيجة هنا." : "ما فيه تقييمات بعد.") + '</p>';
     $("sortSel").style.display = "none";
@@ -955,24 +958,28 @@ function renderRated(){
   table.appendChild(thead);
 
   const tbody = document.createElement("tbody");
-  const view = sortedRated();
 
-  /* ترتيب تنافسي: المتساويان يأخذان نفس الرقم، واللي بعدهما يقفز */
-  const valOf = r => sortKey === "score" ? Number(fmtScore(scoreOf(r))) : Number(r[sortKey]);
-  const ranks = [];
-  let prevVal = null, prevRank = 0;
-  view.forEach((r, i) => {
-    const v = valOf(r);
-    if (prevVal !== null && v === prevVal){ ranks.push(prevRank); }
-    else { ranks.push(i + 1); prevRank = i + 1; prevVal = v; }
+  /* ترتيب تنافسي محسوب على القائمة كاملة، فالبحث ما يغيّر مرتبة المطعم.
+     نفس المرتبة فقط لو تطابق الدجاج والثوم والسعر — تساوي الدرجة
+     المعروضة وحده ما يكفي لأن الفواصل العشرية قد تخفي فرقاً. */
+  const identical = (a, b) => a && b &&
+    Number(a.chicken) === Number(b.chicken) &&
+    Number(a.garlic)  === Number(b.garlic)  &&
+    Number(a.price)   === Number(b.price);
+
+  const rankOf = new Map();
+  let prevRank = 0;
+  full.forEach((r, i) => {
+    if (i > 0 && identical(r, full[i - 1])) rankOf.set(r, prevRank);
+    else { rankOf.set(r, i + 1); prevRank = i + 1; }
   });
 
-  view.forEach((r, i) => {
+  view.forEach(r => {
     const tr = document.createElement("tr");
 
     const tdN = document.createElement("td");
     tdN.className = "cell-n";
-    tdN.textContent = ranks[i];
+    tdN.textContent = rankOf.get(r);
     tr.appendChild(tdN);
 
     const tdP = document.createElement("td");
