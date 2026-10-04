@@ -296,6 +296,13 @@
       "chicken": 10,
       "garlic": 10,
       "price": 7
+    },
+    {
+      "name": "عزاز",
+      "logo": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ8V7XgEA3Cfavvd4zoQdvB4okEH2lpaZqVkfLJSTpWwGp0zeBJ13KZgZU&s=10",
+      "chicken": 9,
+      "garlic": 7,
+      "price": 7
     }
   ],
   "excluded": [
