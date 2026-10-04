@@ -14,6 +14,16 @@
       "name": "أماسي الديوان",
       "logo": "https://lh3.googleusercontent.com/grass-cs/ACvplmMaJjWixZTT7GDj6dHiOWCkLDX671ogewiUXK2HKoNs6AKVDsD9HB91cNVa_p5qD4kLsSc4-Vr-yss6akum72KpffBsaMaJ2_SBraOTPeTgB78GcCDDmYfr-nMaBmdftvT_0VlxVe7GKqaW=w960-h1200-n-k-no?utm_source=chatgpt.com",
       "note": ""
+    },
+    {
+      "name": "أدار",
+      "logo": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQHZPrikv_Ktb9ywhQSh896BRW41BAKWaFRbSgJ7RIuTOJ2TlX2xyZ7jvw&s=10",
+      "note": ""
+    },
+    {
+      "name": "هليّل",
+      "logo": "https://images.deliveryhero.io/image/hungerstation/restaurant/logo_ar/28819ea73dc87c464a546e6e1df35493.png",
+      "note": ""
     }
   ],
   "rated": [
@@ -281,34 +291,6 @@
       "logo": "https://lh3.googleusercontent.com/gps-cs-s/AHRPTWndTooA5vm64o6Uj9gR6oNnILfNR7a1_bEwJVQGF5mKz_2q1e55PsLuTQ82kfnPqth4FeMAojlqu2Atlc5j2UnQGG7FjV52d7qPMKplKyiA8PPvGE3G5EigpTc_MQzr2JpEUwa4GEbh68E2=s1360-w1360-h1020-rw",
       "chicken": 0,
       "garlic": 2,
-      "price": 7
-    },
-    {
-      "name": "هليل",
-      "logo": "https://images.deliveryhero.io/image/hungerstation/restaurant/logo_ar/28819ea73dc87c464a546e6e1df35493.png",
-      "chicken": 7,
-      "garlic": 5,
-      "price": 8
-    },
-    {
-      "name": "شفيق",
-      "logo": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTbnULwk81V8E9iFZrhe0XieyT9Cnr16Kin1whDfRVNKuonu4ZkSCurIr4&s=10",
-      "chicken": 7,
-      "garlic": 5,
-      "price": 8
-    },
-    {
-      "name": "عزاز",
-      "logo": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ8V7XgEA3Cfavvd4zoQdvB4okEH2lpaZqVkfLJSTpWwGp0zeBJ13KZgZU&s=10",
-      "chicken": 9,
-      "garlic": 7,
-      "price": 7
-    },
-    {
-      "name": "ادار",
-      "logo": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQHZPrikv_Ktb9ywhQSh896BRW41BAKWaFRbSgJ7RIuTOJ2TlX2xyZ7jvw&s=10",
-      "chicken": 10,
-      "garlic": 10,
       "price": 7
     }
   ],
